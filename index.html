@@ -55,52 +55,61 @@
     .gallery__item img { transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1), filter 400ms ease; }
     .gallery__item:hover img { transform: scale(1.05); filter: brightness(1.05); }
 
-    /* ── Section COMPARAISON (avant / après) ────────────────────── */
-    .comparison        { padding: clamp(4rem, 8vh, 8rem) clamp(1.25rem, 4vw, 4rem); background: #faf7f0; }
-    .comparison__head  { text-align: center; max-width: 60ch; margin: 0 auto clamp(2rem, 5vh, 4rem); }
-    .comparison__title { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2rem, 4.5vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0.6rem 0 1rem; }
-    .comparison__title em { font-style: italic; color: rgba(20, 17, 11, 0.55); }
-    .comparison__sub   { color: rgba(20, 17, 11, 0.6); font-size: 0.92rem; line-height: 1.5; }
-    .comparison__grid  { display: grid; gap: clamp(1.25rem, 3vw, 2.4rem); grid-template-columns: 1fr; max-width: 1240px; margin: 0 auto; }
-    @media (min-width: 900px) { .comparison__grid { grid-template-columns: 1fr 1fr; } }
+    /* ── Section LECTURES (auto-fade pairs) ───────────────────── */
+    .lectures        { padding: clamp(4rem, 8vh, 8rem) clamp(1.25rem, 4vw, 4rem); background: #faf7f0; }
+    .lectures__head  { text-align: center; max-width: 64ch; margin: 0 auto clamp(2rem, 5vh, 4rem); }
+    .lectures__title { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2rem, 4.5vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0.6rem 0 1rem; }
+    .lectures__title em { font-style: italic; color: rgba(20, 17, 11, 0.55); }
+    .lectures__sub   { color: rgba(20, 17, 11, 0.6); font-size: 0.92rem; line-height: 1.55; max-width: 56ch; margin: 0 auto; }
+    .lectures__grid  { display: grid; gap: clamp(1.25rem, 2.5vw, 2rem); grid-template-columns: 1fr; max-width: 1320px; margin: 0 auto; }
+    @media (min-width: 760px)  { .lectures__grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 1180px) { .lectures__grid { grid-template-columns: repeat(4, 1fr); } }
 
-    .ba-slider {
-      --pos: 50%;
-      position: relative; aspect-ratio: 3/2; overflow: hidden; border-radius: 6px;
-      cursor: ew-resize; user-select: none; touch-action: none;
-      box-shadow: 0 16px 60px rgba(20, 17, 11, 0.18);
-      background: #14110b;
+    /* Each pair cycles A→B→A on 10s; offsets via --fp-offset stagger them. */
+    .fade-pair {
+      --fp-cycle: 10s;
+      --fp-offset: 0s;
+      position: relative; aspect-ratio: 4/3; overflow: hidden; border-radius: 6px;
+      background: #14110b; box-shadow: 0 14px 50px rgba(20,17,11,0.18);
+      isolation: isolate;
     }
-    .ba-slider__img    { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
-    .ba-slider__clip   { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); will-change: clip-path; }
-    .ba-slider__handle {
-      position: absolute; top: 0; bottom: 0; left: var(--pos); transform: translateX(-50%);
-      width: 56px; background: transparent; border: 0; padding: 0; cursor: ew-resize;
-      z-index: 6; will-change: left;
+    .fade-pair__img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+      will-change: opacity, transform; transform-origin: 50% 50%;
     }
-    .ba-slider__handle-bar  { position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 2px; background: white; box-shadow: 0 0 0 1px rgba(0,0,0,0.06); }
-    .ba-slider__handle-knob {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 48px; height: 48px; border-radius: 999px;
-      background: white; color: #14110b;
-      display: grid; place-items: center;
-      font-size: 18px; letter-spacing: 0.05em;
-      box-shadow: 0 6px 22px rgba(0,0,0,0.28);
-      transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+    /* Slow Ken-Burns layered on top of the cross-fade */
+    .fade-pair__img--a {
+      animation: fp-fade-a var(--fp-cycle) ease-in-out infinite var(--fp-offset),
+                 fp-kb-a   var(--fp-cycle) ease-in-out infinite var(--fp-offset);
     }
-    .ba-slider:hover .ba-slider__handle-knob,
-    .ba-slider.is-dragging .ba-slider__handle-knob { transform: translate(-50%, -50%) scale(1.08); }
-    .ba-slider__label  {
-      position: absolute; top: 1rem; z-index: 5; pointer-events: none;
+    .fade-pair__img--b {
+      animation: fp-fade-b var(--fp-cycle) ease-in-out infinite var(--fp-offset),
+                 fp-kb-b   var(--fp-cycle) ease-in-out infinite var(--fp-offset);
+    }
+
+    @keyframes fp-fade-a { 0%, 38% { opacity: 1; } 50%, 88% { opacity: 0; } 100% { opacity: 1; } }
+    @keyframes fp-fade-b { 0%, 38% { opacity: 0; } 50%, 88% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes fp-kb-a   { 0% { transform: scale(1.04); } 50% { transform: scale(1.10); } 100% { transform: scale(1.04); } }
+    @keyframes fp-kb-b   { 0% { transform: scale(1.10); } 50% { transform: scale(1.04); } 100% { transform: scale(1.10); } }
+
+    /* Chips that label which state is currently visible */
+    .fade-pair__chip {
+      position: absolute; top: 1rem; left: 1rem; z-index: 4; pointer-events: none;
       font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
       background: rgba(20, 17, 11, 0.78); color: white;
       padding: 6px 11px; border-radius: 999px;
       backdrop-filter: blur(8px);
+      will-change: opacity;
     }
-    .ba-slider__label--before { left: 1rem;  }
-    .ba-slider__label--after  { right: 1rem; }
-    .ba-slider__caption {
-      position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 5; pointer-events: none;
+    .fade-pair__chip--a { animation: fp-fade-a var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
+    .fade-pair__chip--b { animation: fp-fade-b var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
+
+    /* Night theme: warm chip on the night side */
+    .fade-pair--theme-night .fade-pair__chip--b { background: rgba(218, 164, 70, 0.92); color: #14110b; letter-spacing: 0.24em; }
+    .fade-pair--theme-furnish .fade-pair__chip--b { background: rgba(232, 226, 213, 0.96); color: #14110b; }
+
+    .fade-pair__caption {
+      position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 4; pointer-events: none;
       font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.06em;
       background: rgba(255,255,255,0.94); color: #14110b;
       padding: 6px 14px; border-radius: 999px;
@@ -108,11 +117,20 @@
       white-space: nowrap;
     }
 
+    /* Subtle hover lift */
+    .fade-pair { transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 600ms cubic-bezier(0.16, 1, 0.3, 1); }
+    .fade-pair:hover { transform: translateY(-4px); box-shadow: 0 22px 70px rgba(20,17,11,0.26); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-pair__img, .fade-pair__chip { animation: none !important; }
+      .fade-pair__img--b, .fade-pair__chip--b { opacity: 1; }
+      .fade-pair__img--a, .fade-pair__chip--a { opacity: 0; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       img.hero__video, img.strip__video, img.scrub__video,
       .hero__video--motion, .scrub__video--motion,
-      .space, .space__media img, .gallery__item img,
-      .ba-slider__handle-knob { animation: none !important; transition: none !important; }
+      .space, .space__media img, .gallery__item img { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
@@ -393,51 +411,61 @@
     </section>
 
     <!-- ─────────────────────────────────────────────────────────
-         02b · COMPARAISON — slider avant / après (vide vs meublé)
+         02b · LECTURES — fade auto entre paires : vide↔meublé, jour↔nuit
     ────────────────────────────────────────────────────────── -->
-    <section class="comparison" id="comparison" data-section="comparison">
-      <header class="comparison__head reveal">
+    <section class="lectures" id="lectures" data-section="lectures">
+      <header class="lectures__head reveal">
         <div class="chap-mark">
           <span class="chap-mark__num">02b</span>
-          <span class="chap-mark__lab">Mise en scène</span>
+          <span class="chap-mark__lab">Lectures</span>
         </div>
-        <h2 class="comparison__title">
-          Vide ou meublé,
-          <em>la même architecture.</em>
+        <h2 class="lectures__title">
+          Quatre lectures,
+          <em>une seule maison.</em>
         </h2>
-        <p class="comparison__sub">
-          Glissez la poignée centrale pour révéler les espaces dans une mise en scène contemporaine.
+        <p class="lectures__sub">
+          Vide ou meublé, jour ou nuit&nbsp;: les images s'enchaînent en boucle pour révéler la même architecture sous quatre lumières.
         </p>
       </header>
 
-      <div class="comparison__grid">
-        <figure class="ba-slider reveal" data-ba-slider style="--pos: 50%">
-          <img class="ba-slider__img ba-slider__img--after"  src="assets/images/meuble-mezzanine.png" alt="Mezzanine meublée — projection contemporaine" loading="lazy" />
-          <div class="ba-slider__clip">
-            <img class="ba-slider__img ba-slider__img--before" src="assets/images/8715417_4_20260122143308.jpg" alt="Mezzanine actuelle — espace brut" loading="lazy" />
-          </div>
-          <span class="ba-slider__label ba-slider__label--before">État actuel</span>
-          <span class="ba-slider__label ba-slider__label--after">Mise en scène</span>
-          <button class="ba-slider__handle" type="button" aria-label="Glisser pour comparer" data-ba-handle>
-            <span class="ba-slider__handle-bar" aria-hidden="true"></span>
-            <span class="ba-slider__handle-knob" aria-hidden="true">⇆</span>
-          </button>
-          <figcaption class="ba-slider__caption">La mezzanine · vue traversante</figcaption>
+      <div class="lectures__grid">
+
+        <!-- 1 · Mezzanine vide ⟷ meublée -->
+        <figure class="fade-pair fade-pair--theme-furnish reveal">
+          <img class="fade-pair__img fade-pair__img--a" src="assets/images/8715417_4_20260122143308.jpg" alt="Mezzanine — état actuel" loading="lazy" />
+          <img class="fade-pair__img fade-pair__img--b" src="assets/images/meuble-mezzanine.png"      alt="Mezzanine — projection meublée" loading="lazy" />
+          <span class="fade-pair__chip fade-pair__chip--a">État actuel</span>
+          <span class="fade-pair__chip fade-pair__chip--b">Mise en scène</span>
+          <figcaption class="fade-pair__caption">La mezzanine · perspective traversante</figcaption>
         </figure>
 
-        <figure class="ba-slider reveal" data-ba-slider style="--pos: 50%">
-          <img class="ba-slider__img ba-slider__img--after"  src="assets/images/meuble-salon.png" alt="Séjour meublé — projection contemporaine" loading="lazy" />
-          <div class="ba-slider__clip">
-            <img class="ba-slider__img ba-slider__img--before" src="assets/images/8715417_9_20260122143309.jpg" alt="Séjour actuel — volume brut" loading="lazy" />
-          </div>
-          <span class="ba-slider__label ba-slider__label--before">État actuel</span>
-          <span class="ba-slider__label ba-slider__label--after">Mise en scène</span>
-          <button class="ba-slider__handle" type="button" aria-label="Glisser pour comparer" data-ba-handle>
-            <span class="ba-slider__handle-bar" aria-hidden="true"></span>
-            <span class="ba-slider__handle-knob" aria-hidden="true">⇆</span>
-          </button>
-          <figcaption class="ba-slider__caption">Le séjour · ouverture sur le jardin</figcaption>
+        <!-- 2 · Séjour vide ⟷ meublé -->
+        <figure class="fade-pair fade-pair--theme-furnish reveal" style="--fp-offset: -2.5s">
+          <img class="fade-pair__img fade-pair__img--a" src="assets/images/8715417_9_20260122143309.jpg" alt="Séjour — état actuel" loading="lazy" />
+          <img class="fade-pair__img fade-pair__img--b" src="assets/images/meuble-salon.png"           alt="Séjour — projection meublée" loading="lazy" />
+          <span class="fade-pair__chip fade-pair__chip--a">État actuel</span>
+          <span class="fade-pair__chip fade-pair__chip--b">Mise en scène</span>
+          <figcaption class="fade-pair__caption">Le séjour · ouverture sur le jardin</figcaption>
         </figure>
+
+        <!-- 3 · Façade jour ⟷ nuit -->
+        <figure class="fade-pair fade-pair--theme-night reveal" style="--fp-offset: -5s">
+          <img class="fade-pair__img fade-pair__img--a" src="assets/images/erpicum-org-01.jpg" alt="Façade — jour" loading="lazy" />
+          <img class="fade-pair__img fade-pair__img--b" src="assets/images/nuit-facade.png"   alt="Façade — nuit" loading="lazy" />
+          <span class="fade-pair__chip fade-pair__chip--a">Jour</span>
+          <span class="fade-pair__chip fade-pair__chip--b">Nuit</span>
+          <figcaption class="fade-pair__caption">La façade · porte-à-faux sur le bassin</figcaption>
+        </figure>
+
+        <!-- 4 · Aérien jour ⟷ nuit -->
+        <figure class="fade-pair fade-pair--theme-night reveal" style="--fp-offset: -7.5s">
+          <img class="fade-pair__img fade-pair__img--a" src="assets/images/8715417_2_20260122143307.jpg" alt="Aérien — jour" loading="lazy" />
+          <img class="fade-pair__img fade-pair__img--b" src="assets/images/nuit-aerien.png"            alt="Aérien — nuit" loading="lazy" />
+          <span class="fade-pair__chip fade-pair__chip--a">Jour</span>
+          <span class="fade-pair__chip fade-pair__chip--b">Nuit</span>
+          <figcaption class="fade-pair__caption">Vue aérienne · au cœur des frondaisons</figcaption>
+        </figure>
+
       </div>
     </section>
 
@@ -832,46 +860,5 @@
 
   <script src="script.js"></script>
 
-  <!-- Composant slider avant/après — vanilla, drag/touch -->
-  <script>
-    (function () {
-      const sliders = document.querySelectorAll('[data-ba-slider]');
-      sliders.forEach((slider) => {
-        let dragging = false;
-        const setPos = (clientX) => {
-          const r = slider.getBoundingClientRect();
-          const pct = Math.max(0, Math.min(100, ((clientX - r.left) / r.width) * 100));
-          slider.style.setProperty('--pos', pct.toFixed(2) + '%');
-        };
-        const start = (clientX, e) => {
-          dragging = true;
-          slider.classList.add('is-dragging');
-          if (e && e.cancelable) e.preventDefault();
-          setPos(clientX);
-        };
-        const move = (clientX) => { if (!dragging) return; setPos(clientX); };
-        const stop = () => { dragging = false; slider.classList.remove('is-dragging'); };
-
-        slider.addEventListener('mousedown',  (e) => start(e.clientX, e));
-        slider.addEventListener('touchstart', (e) => { if (e.touches[0]) start(e.touches[0].clientX, e); }, { passive: false });
-        window.addEventListener('mousemove',  (e) => move(e.clientX));
-        window.addEventListener('touchmove',  (e) => { if (e.touches[0]) move(e.touches[0].clientX); }, { passive: true });
-        window.addEventListener('mouseup',    stop);
-        window.addEventListener('touchend',   stop);
-        window.addEventListener('touchcancel', stop);
-
-        // Keyboard support on the handle
-        const handle = slider.querySelector('[data-ba-handle]');
-        if (handle) {
-          handle.addEventListener('keydown', (e) => {
-            const cur = parseFloat(getComputedStyle(slider).getPropertyValue('--pos')) || 50;
-            const delta = e.shiftKey ? 10 : 4;
-            if (e.key === 'ArrowLeft')  { slider.style.setProperty('--pos', Math.max(0, cur - delta) + '%'); e.preventDefault(); }
-            if (e.key === 'ArrowRight') { slider.style.setProperty('--pos', Math.min(100, cur + delta) + '%'); e.preventDefault(); }
-          });
-        }
-      });
-    })();
-  </script>
 </body>
 </html>

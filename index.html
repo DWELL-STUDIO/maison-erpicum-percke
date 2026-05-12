@@ -55,47 +55,54 @@
     .gallery__item img { transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1), filter 400ms ease; }
     .gallery__item:hover img { transform: scale(1.05); filter: brightness(1.05); }
 
-    /* ── Section FILMS — 3 scroll-scrub video cards ─────────── */
-    .films            { padding: clamp(5rem, 10vh, 10rem) clamp(1.25rem, 4vw, 4rem); background: #f1ede4; }
-    .films__head      { text-align: center; max-width: 70ch; margin: 0 auto clamp(3rem, 6vh, 5rem); padding: 0 1rem; }
+    /* ── Section FILMS — 3 vidéos en plein écran qui se fondent au scroll ── */
+    .films-fs           { background: #14110b; color: #fdfcf9; position: relative; }
+    .films-fs__track    { position: relative; height: 320vh; }   /* 3 slides + 20vh exit buffer */
+    .films-fs__stage    { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-    /* Eyebrow : numéro chapitre + rule + label, façon revue d'architecture */
-    .films__eyebrow         { display: inline-flex; align-items: center; gap: 0.9rem; margin-bottom: 1.6rem; color: rgba(20,17,11,0.62); font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; }
-    .films__eyebrow-num     { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: 16px; letter-spacing: 0; text-transform: none; color: rgba(20,17,11,0.88); }
-    .films__eyebrow-rule    { display: block; width: 38px; height: 1px; background: rgba(20,17,11,0.32); }
-
-    /* Titre éditorial — gros, deux lignes contrastées */
-    .films__title           { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2.4rem, 5.5vw, 4.6rem); letter-spacing: -0.025em; line-height: 1; margin: 0 0 1.4rem; }
-    .films__title-line      { display: block; }
-    .films__title-line--accent { font-style: italic; color: rgba(20,17,11,0.5); margin-top: 0.15em; }
-
-    /* Sous-titre italique en Fraunces, plus chuchoté */
-    .films__sub             { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: clamp(1rem, 1.55vw, 1.2rem); line-height: 1.5; color: rgba(20,17,11,0.58); margin: 0 auto; max-width: 50ch; }
-
-    /* Cue de scroll : ligne verticale fine + impulsion qui descend en boucle */
-    .films__cue             { display: block; margin: 2.6rem auto 0; width: 1px; height: 64px; background: rgba(20,17,11,0.14); position: relative; overflow: hidden; }
-    .films__cue-line        { position: absolute; top: 0; left: 0; width: 100%; height: 36%; background: linear-gradient(180deg, rgba(20,17,11,0) 0%, rgba(20,17,11,0.55) 50%, rgba(20,17,11,0) 100%); animation: films-cue 2.6s cubic-bezier(0.83, 0, 0.17, 1) infinite; will-change: transform; }
-    @keyframes films-cue {
-      0%   { transform: translateY(-100%); opacity: 0; }
-      20%  { opacity: 1; }
-      80%  { opacity: 1; }
-      100% { transform: translateY(280%); opacity: 0; }
+    .ff-slide           { position: absolute; inset: 0; opacity: 0; will-change: opacity; }
+    .ff-slide[data-ff-slide="0"] { opacity: 1; }   /* slide initiale par défaut */
+    .ff-slide__video    { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+    .ff-slide__veil     {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(20,17,11,0.42) 0%, rgba(20,17,11,0) 26%, rgba(20,17,11,0) 56%, rgba(20,17,11,0.78) 100%),
+        linear-gradient(90deg,  rgba(20,17,11,0.32) 0%, rgba(20,17,11,0) 38%);
     }
-    @media (prefers-reduced-motion: reduce) { .films__cue-line { animation: none; opacity: 1; } }
-    .films__grid      { display: grid; gap: clamp(1.25rem, 2.5vw, 2rem); grid-template-columns: 1fr; max-width: 1320px; margin: 0 auto; align-items: stretch; }
-    @media (min-width: 900px) { .films__grid { grid-template-columns: repeat(3, 1fr); } }
 
-    .film-card        { position: relative; display: flex; flex-direction: column; min-height: 60vh; border-radius: 6px; overflow: hidden; background: #14110b; box-shadow: 0 14px 50px rgba(20,17,11,0.22); transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 600ms cubic-bezier(0.16, 1, 0.3, 1); }
-    .film-card:hover  { transform: translateY(-4px); box-shadow: 0 22px 70px rgba(20,17,11,0.32); }
-    .film-card__media { position: relative; flex: 1 1 auto; min-height: 320px; }
-    .film-card__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
-    .film-card__veil  { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,17,11,0) 50%, rgba(20,17,11,0.78) 100%); pointer-events: none; }
-    .film-card__caption { position: relative; padding: 1.25rem 1.4rem 1.4rem; color: #fdfcf9; background: #14110b; }
-    .film-card__num   { display: block; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(253,252,249,0.5); margin-bottom: 0.6rem; }
-    .film-card__title { font-family: 'Fraunces', serif; font-weight: 300; font-size: 1.4rem; line-height: 1.15; letter-spacing: -0.01em; margin: 0 0 0.5rem; }
-    .film-card__desc  { font-family: 'Inter', sans-serif; font-size: 0.86rem; line-height: 1.55; color: rgba(253,252,249,0.74); margin: 0; }
-    .film-card--vertical .film-card__media { aspect-ratio: 3/4; min-height: 0; }
-    @media (max-width: 899px) { .film-card { min-height: 0; } .film-card__media { aspect-ratio: 4/3; min-height: 0; } }
+    /* Caption standard (slides 2 & 3) — bas-gauche */
+    .ff-slide__caption  {
+      position: absolute; bottom: clamp(2.5rem, 7vh, 5rem); left: clamp(1.5rem, 5vw, 5rem); right: clamp(1.5rem, 5vw, 5rem);
+      max-width: 56ch; z-index: 4; color: #fdfcf9;
+    }
+    .ff-slide__num      { display: block; font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(253,252,249,0.62); margin-bottom: 0.9rem; }
+    .ff-slide__title    { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2rem, 4.4vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0 0 0.8rem; }
+    .ff-slide__desc     { font-family: 'Inter', sans-serif; font-size: clamp(0.92rem, 1.05vw, 1.05rem); line-height: 1.55; color: rgba(253,252,249,0.78); max-width: 46ch; margin: 0; }
+
+    /* Caption "lead" (slide 1) — plus dense, façon générique de section */
+    .ff-slide__caption--lead { max-width: 64ch; }
+    .ff-slide__eyebrow  { display: inline-flex; align-items: center; gap: 0.7rem; font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(253,252,249,0.7); margin-bottom: 1.6rem; }
+    .ff-slide__hero     { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2.4rem, 5.6vw, 4.8rem); letter-spacing: -0.025em; line-height: 1; margin: 0 0 1.2rem; color: #fdfcf9; }
+    .ff-slide__hero em  { font-style: italic; color: rgba(253,252,249,0.66); display: block; margin-top: 0.15em; }
+    .ff-slide__lede     { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: clamp(1rem, 1.5vw, 1.18rem); line-height: 1.5; color: rgba(253,252,249,0.7); max-width: 50ch; margin: 0 0 2rem; }
+    .ff-slide__meta     { display: flex; flex-direction: column; gap: 0.4rem; padding-top: 1.4rem; border-top: 1px solid rgba(253,252,249,0.16); max-width: 46ch; }
+
+    /* Indicateur (top right) */
+    .ff-progress        {
+      position: absolute; top: clamp(1.2rem, 3vh, 2rem); right: clamp(1.2rem, 3vw, 2rem); z-index: 5;
+      display: flex; align-items: center; gap: 0.5rem;
+      background: rgba(20,17,11,0.42); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      padding: 0.7rem 1rem 0.7rem 1.1rem; border-radius: 999px;
+      font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+      color: rgba(253,252,249,0.92);
+    }
+    .ff-progress__num   { font-size: 1.1rem; min-width: 1.6em; text-align: center; }
+    .ff-progress__sep   { opacity: 0.45; }
+    .ff-progress__total { font-size: 0.95rem; opacity: 0.7; margin-right: 0.6rem; }
+    .ff-progress__rail  { width: 80px; height: 2px; background: rgba(253,252,249,0.2); border-radius: 99px; overflow: hidden; }
+    .ff-progress__fill  { width: 0%; height: 100%; background: rgba(253,252,249,0.92); transform-origin: left center; will-change: width; transition: width 80ms linear; }
+    @media (max-width: 600px) { .ff-progress__rail { width: 48px; } }
+
 
     /* ── Section LECTURES (auto-fade pairs) ───────────────────── */
     .lectures        { padding: clamp(4rem, 8vh, 8rem) clamp(1.25rem, 4vw, 4rem); background: #faf7f0; }
@@ -681,73 +688,62 @@
     <!-- ─────────────────────────────────────────────────────────
          04b · FILMS — trois moments scrubés au scroll
     ────────────────────────────────────────────────────────── -->
-    <section class="films" id="films" data-section="films">
-      <header class="films__head reveal">
-        <div class="films__eyebrow">
-          <span class="films__eyebrow-num">04</span>
-          <span class="films__eyebrow-rule" aria-hidden="true"></span>
-          <span class="films__eyebrow-lab">Films · trois cadrages</span>
-        </div>
+    <section class="films-fs" id="films" data-section="films">
+      <div class="films-fs__track" data-films-fs>
+        <div class="films-fs__stage">
 
-        <h2 class="films__title">
-          <span class="films__title-line">Trois cadrages,</span>
-          <em class="films__title-line films__title-line--accent">en mouvement continu.</em>
-        </h2>
-
-        <p class="films__sub">
-          Trois plans courts captés en archive, joués en boucle —
-          la maison vit pendant que vous lisez.
-        </p>
-
-        <span class="films__cue" aria-hidden="true">
-          <span class="films__cue-line"></span>
-        </span>
-      </header>
-
-      <div class="films__grid">
-
-        <article class="film-card strip" data-strip>
-          <div class="film-card__media">
-            <video class="film-card__video strip__video" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-02.jpg">
+          <article class="ff-slide" data-ff-slide="0">
+            <video class="ff-slide__video" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-02.jpg">
               <source src="assets/videos/piscine-pergola.mp4" type="video/mp4" />
             </video>
-            <div class="film-card__veil"></div>
-          </div>
-          <figcaption class="film-card__caption">
-            <span class="film-card__num">A · 01</span>
-            <h3 class="film-card__title">La piscine, à l'ombre.</h3>
-            <p class="film-card__desc">Sous la pergola du porte-à-faux, la piscine se déploie en longueur. Eau turquoise, transats minéraux, écran végétal continu.</p>
-          </figcaption>
-        </article>
+            <div class="ff-slide__veil"></div>
+            <div class="ff-slide__caption ff-slide__caption--lead">
+              <span class="ff-slide__eyebrow">04 · Films · Trois cadrages</span>
+              <h2 class="ff-slide__hero">
+                Trois cadrages,
+                <em>en mouvement continu.</em>
+              </h2>
+              <p class="ff-slide__lede">La maison vit pendant que vous scrollez. Trois plans, joués en plein écran.</p>
+              <div class="ff-slide__meta">
+                <span class="ff-slide__num">01 · La piscine, à l'ombre.</span>
+                <span class="ff-slide__desc">Sous la pergola du porte-à-faux, le bassin se déploie en longueur.</span>
+              </div>
+            </div>
+          </article>
 
-        <article class="film-card strip" data-strip>
-          <div class="film-card__media">
-            <video class="film-card__video strip__video" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-01.jpg">
+          <article class="ff-slide" data-ff-slide="1">
+            <video class="ff-slide__video" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-01.jpg">
               <source src="assets/videos/porte-a-faux-piscine.mp4" type="video/mp4" />
             </video>
-            <div class="film-card__veil"></div>
-          </div>
-          <figcaption class="film-card__caption">
-            <span class="film-card__num">B · 02</span>
-            <h3 class="film-card__title">Le porte-à-faux.</h3>
-            <p class="film-card__desc">Le volume blanc en surplomb, signature de l'écriture Erpicum. Une lecture diagonale du bassin.</p>
-          </figcaption>
-        </article>
+            <div class="ff-slide__veil"></div>
+            <div class="ff-slide__caption">
+              <span class="ff-slide__num">02 · Le porte-à-faux.</span>
+              <h3 class="ff-slide__title">Volume blanc en surplomb.</h3>
+              <p class="ff-slide__desc">Signature de l'écriture Erpicum — une lecture diagonale du bassin.</p>
+            </div>
+          </article>
 
-        <article class="film-card film-card--vertical strip" data-strip>
-          <div class="film-card__media">
-            <video class="film-card__video strip__video" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-09.jpg">
+          <article class="ff-slide" data-ff-slide="2">
+            <video class="ff-slide__video" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-09.jpg">
               <source src="assets/videos/piscine-vertical.mp4" type="video/mp4" />
             </video>
-            <div class="film-card__veil"></div>
-          </div>
-          <figcaption class="film-card__caption">
-            <span class="film-card__num">C · 03</span>
-            <h3 class="film-card__title">Le bassin, à la verticale.</h3>
-            <p class="film-card__desc">Cadrage vertical sur la longueur du bassin. Le porte-à-faux écrase l'horizon, le ciel reste le seul personnage.</p>
-          </figcaption>
-        </article>
+            <div class="ff-slide__veil"></div>
+            <div class="ff-slide__caption">
+              <span class="ff-slide__num">03 · Le bassin, à la verticale.</span>
+              <h3 class="ff-slide__title">L'horizon écrasé par le volume blanc.</h3>
+              <p class="ff-slide__desc">Cadrage vertical sur la longueur du bassin — le ciel reste le seul personnage.</p>
+            </div>
+          </article>
 
+          <!-- Indicateur position -->
+          <div class="ff-progress" aria-hidden="true">
+            <span class="ff-progress__num" data-ff-current>01</span>
+            <span class="ff-progress__sep">·</span>
+            <span class="ff-progress__total">03</span>
+            <div class="ff-progress__rail"><div class="ff-progress__fill" data-ff-fill></div></div>
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -920,5 +916,68 @@
 
   <script src="script.js"></script>
 
+  <!-- ── Films section : crossfade des 3 vidéos plein écran piloté par le scroll ── -->
+  <script>
+    (function () {
+      const track  = document.querySelector('[data-films-fs]');
+      if (!track) return;
+      const slides  = Array.from(track.querySelectorAll('.ff-slide'));
+      const videos  = slides.map((s) => s.querySelector('video'));
+      const numEl   = track.querySelector('[data-ff-current]');
+      const fillEl  = track.querySelector('[data-ff-fill]');
+      const N       = slides.length;
+      if (N === 0) return;
+
+      // Chaque slide est centrée à i/(N-1) dans la progression du scroll.
+      // halfWidth = 0.7 · stride permet un beau croisement à 50/50.
+      const stride    = 1 / Math.max(1, N - 1);
+      const halfWidth = stride * 0.7;
+
+      let raf = 0;
+
+      function update() {
+        const r = track.getBoundingClientRect();
+        const scrollable = r.height - window.innerHeight;
+        if (scrollable <= 0) return;
+        const scrolled = Math.min(Math.max(-r.top, 0), scrollable);
+        const progress = scrolled / scrollable;          // 0 → 1
+
+        let bestI = 0, bestDist = Infinity;
+
+        slides.forEach((slide, i) => {
+          const center = i * stride;
+          const dist   = Math.abs(progress - center);
+          let op = 1 - dist / halfWidth;
+          if (op < 0) op = 0;
+          if (op > 1) op = 1;
+          slide.style.opacity = op.toFixed(3);
+
+          // Pause des vidéos quasi-invisibles (économie CPU)
+          const v = videos[i];
+          if (v) {
+            if (op > 0.05) {
+              if (v.paused) { const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+            } else {
+              if (!v.paused) v.pause();
+            }
+          }
+
+          if (dist < bestDist) { bestDist = dist; bestI = i; }
+        });
+
+        if (numEl)  numEl.textContent  = String(bestI + 1).padStart(2, '0');
+        if (fillEl) fillEl.style.width = (progress * 100).toFixed(1) + '%';
+      }
+
+      function onScroll() {
+        if (raf) return;
+        raf = requestAnimationFrame(() => { raf = 0; update(); });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
+  </script>
 </body>
 </html>

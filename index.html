@@ -85,57 +85,88 @@
     .lectures__grid  { display: grid; gap: clamp(1.5rem, 3vw, 2.4rem); grid-template-columns: 1fr; max-width: 1640px; margin: 0 auto; }
     @media (min-width: 820px) { .lectures__grid { grid-template-columns: 1fr 1fr; } }
 
-    /* Each pair cycles A↔B on 12s; transitions differ by theme:
-       - .fade-pair--theme-furnish : HORIZONTAL WIPE (clip-path, left-to-right)
-       - .fade-pair--theme-night   : VERTICAL CURTAIN (clip-path, top-to-bottom — like dusk descending) */
+    /* Each pair cycles A→B→A en ping-pong (16s) avec easing expo —
+       le wipe/curtain rentre, tient, puis ressort par le même bord (pas de snap).
+       - .fade-pair--theme-furnish : HORIZONTAL WIPE (clip-path, gauche→droite)
+       - .fade-pair--theme-night   : VERTICAL CURTAIN (clip-path, haut→bas, crépuscule) */
     .fade-pair {
-      --fp-cycle: 12s;
+      --fp-cycle: 16s;
       --fp-offset: 0s;
+      --fp-ease: cubic-bezier(0.83, 0, 0.17, 1); /* expo in-out */
       position: relative; aspect-ratio: 16/10; overflow: hidden; border-radius: 8px;
       background: #14110b; box-shadow: 0 22px 70px rgba(20,17,11,0.24);
       isolation: isolate;
     }
     .fade-pair__img {
       position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
-      will-change: clip-path, transform; transform-origin: 50% 50%;
+      will-change: clip-path, transform, filter; transform-origin: 50% 50%;
     }
-    .fade-pair__img--a {
-      animation: fp-kb-a var(--fp-cycle) ease-in-out infinite var(--fp-offset);
-    }
-    .fade-pair__img--b {
-      animation: fp-kb-b var(--fp-cycle) ease-in-out infinite var(--fp-offset);
-    }
+    /* Bottom layer (A) garde un Ken Burns continu pour la respiration */
+    .fade-pair__img--a { animation: fp-kb-a var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
+    /* Top layer (B) : Ken Burns + son entrée/sortie via clip-path (déclaré par thème) */
+    .fade-pair__img--b { animation: fp-kb-b var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
 
-    /* Horizontal wipe — meublé en balayage gauche→droite */
+    /* ── HORIZONTAL WIPE (meublé) — entre par la gauche, repart par la gauche ── */
     .fade-pair--theme-furnish .fade-pair__img--b {
-      clip-path: inset(0 100% 0 0);
-      animation: fp-wipe-in var(--fp-cycle) cubic-bezier(0.7, 0, 0.3, 1) infinite var(--fp-offset),
-                 fp-kb-b    var(--fp-cycle) ease-in-out infinite var(--fp-offset);
+      clip-path: inset(0 100% 0 0);  /* caché à droite (révèle 0% gauche) */
+      animation:
+        fp-wipe-furnish var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset),
+        fp-zoom-furnish var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset),
+        fp-kb-b         var(--fp-cycle) ease-in-out      infinite var(--fp-offset);
     }
-    @keyframes fp-wipe-in {
-      0%, 35%   { clip-path: inset(0 100% 0 0); }
-      45%, 85%  { clip-path: inset(0 0 0 0); }
-      95%, 100% { clip-path: inset(0 0 0 100%); }
+    @keyframes fp-wipe-furnish {
+      0%        { clip-path: inset(0 100% 0 0); }   /* meublé caché */
+      30%, 35%  { clip-path: inset(0 0 0 0); }      /* totalement révélé (wipe in) */
+      65%, 70%  { clip-path: inset(0 0 0 0); }      /* HOLD — on regarde */
+      100%      { clip-path: inset(0 100% 0 0); }   /* repart par le même bord (wipe out) */
+    }
+    @keyframes fp-zoom-furnish {
+      0%        { transform: scale(1.06); filter: blur(2px) brightness(1.02); }
+      30%, 70%  { transform: scale(1.00); filter: blur(0)   brightness(1); }
+      100%      { transform: scale(1.06); filter: blur(2px) brightness(1.02); }
     }
 
-    /* Vertical curtain — nuit descendante (haut→bas, comme un crépuscule) */
+    /* ── VERTICAL CURTAIN (nuit) — descend du haut, remonte par le haut ── */
     .fade-pair--theme-night .fade-pair__img--b {
-      clip-path: inset(100% 0 0 0);
-      animation: fp-curtain-in var(--fp-cycle) cubic-bezier(0.6, 0, 0.4, 1) infinite var(--fp-offset),
-                 fp-kb-b       var(--fp-cycle) ease-in-out infinite var(--fp-offset);
+      clip-path: inset(100% 0 0 0); /* nuit cachée en haut */
+      animation:
+        fp-curtain-night var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset),
+        fp-tone-night    var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset),
+        fp-kb-b          var(--fp-cycle) ease-in-out      infinite var(--fp-offset);
     }
-    @keyframes fp-curtain-in {
-      0%, 35%   { clip-path: inset(100% 0 0 0); }
-      45%, 85%  { clip-path: inset(0 0 0 0); }
-      95%, 100% { clip-path: inset(0 0 100% 0); }
+    @keyframes fp-curtain-night {
+      0%        { clip-path: inset(100% 0 0 0); }  /* jour visible en intégral */
+      30%, 35%  { clip-path: inset(0 0 0 0); }     /* nuit descendue */
+      65%, 70%  { clip-path: inset(0 0 0 0); }     /* HOLD — tombée de la nuit */
+      100%      { clip-path: inset(100% 0 0 0); }  /* aube — la nuit remonte */
+    }
+    /* Discrète teinte chaude pendant la transition (lueur de crépuscule) */
+    @keyframes fp-tone-night {
+      0%, 100%  { filter: brightness(1) saturate(1); }
+      32%, 68%  { filter: brightness(0.96) saturate(1.08); }
     }
 
-    /* Chip animations driven by simple opacity (synced to wipe/curtain timing) */
-    @keyframes fp-chip-a { 0%, 38% { opacity: 1; } 50%, 88% { opacity: 0; } 100% { opacity: 1; } }
-    @keyframes fp-chip-b { 0%, 38% { opacity: 0; } 50%, 88% { opacity: 1; } 100% { opacity: 0; } }
+    /* Ken Burns continu — A et B respirent en opposition */
+    @keyframes fp-kb-a {
+      0%, 100% { transform: scale(1.04) translate3d(0, 0, 0); }
+      50%      { transform: scale(1.10) translate3d(-1%, -0.5%, 0); }
+    }
+    @keyframes fp-kb-b {
+      0%, 100% { transform: scale(1.10) translate3d(0.5%, 0.5%, 0); }
+      50%      { transform: scale(1.04) translate3d(0, 0, 0); }
+    }
 
-    @keyframes fp-kb-a   { 0% { transform: scale(1.04); } 50% { transform: scale(1.10); } 100% { transform: scale(1.04); } }
-    @keyframes fp-kb-b   { 0% { transform: scale(1.10); } 50% { transform: scale(1.04); } 100% { transform: scale(1.10); } }
+    /* Chip pingpong — synchronisé sur le hold */
+    @keyframes fp-chip-a {
+      0%, 22%  { opacity: 1; transform: translateY(0); }
+      32%, 68% { opacity: 0; transform: translateY(-6px); }
+      78%, 100%{ opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fp-chip-b {
+      0%, 22%  { opacity: 0; transform: translateY(6px); }
+      32%, 68% { opacity: 1; transform: translateY(0); }
+      78%, 100%{ opacity: 0; transform: translateY(6px); }
+    }
 
     /* Chips that label which state is currently visible */
     .fade-pair__chip {
@@ -146,8 +177,8 @@
       backdrop-filter: blur(10px);
       will-change: opacity;
     }
-    .fade-pair__chip--a { animation: fp-chip-a var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
-    .fade-pair__chip--b { animation: fp-chip-b var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
+    .fade-pair__chip--a { animation: fp-chip-a var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset); }
+    .fade-pair__chip--b { animation: fp-chip-b var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset); }
 
     /* Night theme: warm chip on the night side */
     .fade-pair--theme-night .fade-pair__chip--b { background: rgba(218, 164, 70, 0.92); color: #14110b; letter-spacing: 0.24em; }
@@ -481,7 +512,7 @@
         </figure>
 
         <!-- 2 · Séjour vide ⟷ meublé -->
-        <figure class="fade-pair fade-pair--theme-furnish reveal" style="--fp-offset: -2.5s">
+        <figure class="fade-pair fade-pair--theme-furnish reveal" style="--fp-offset: -4s">
           <img class="fade-pair__img fade-pair__img--a" src="assets/images/8715417_9_20260122143309.jpg" alt="Séjour — état actuel" loading="lazy" />
           <img class="fade-pair__img fade-pair__img--b" src="assets/images/meuble-salon.png"           alt="Séjour — projection meublée" loading="lazy" />
           <span class="fade-pair__chip fade-pair__chip--a">État actuel</span>
@@ -490,7 +521,7 @@
         </figure>
 
         <!-- 3 · Façade jour ⟷ nuit -->
-        <figure class="fade-pair fade-pair--theme-night reveal" style="--fp-offset: -5s">
+        <figure class="fade-pair fade-pair--theme-night reveal" style="--fp-offset: -8s">
           <img class="fade-pair__img fade-pair__img--a" src="assets/images/erpicum-org-01.jpg" alt="Façade — jour" loading="lazy" />
           <img class="fade-pair__img fade-pair__img--b" src="assets/images/nuit-facade.png"   alt="Façade — nuit" loading="lazy" />
           <span class="fade-pair__chip fade-pair__chip--a">Jour</span>
@@ -499,7 +530,7 @@
         </figure>
 
         <!-- 4 · Aérien jour ⟷ nuit -->
-        <figure class="fade-pair fade-pair--theme-night reveal" style="--fp-offset: -7.5s">
+        <figure class="fade-pair fade-pair--theme-night reveal" style="--fp-offset: -12s">
           <img class="fade-pair__img fade-pair__img--a" src="assets/images/8715417_2_20260122143307.jpg" alt="Aérien — jour" loading="lazy" />
           <img class="fade-pair__img fade-pair__img--b" src="assets/images/nuit-aerien.png"            alt="Aérien — nuit" loading="lazy" />
           <span class="fade-pair__chip fade-pair__chip--a">Jour</span>

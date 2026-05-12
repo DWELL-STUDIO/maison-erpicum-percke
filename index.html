@@ -56,11 +56,32 @@
     .gallery__item:hover img { transform: scale(1.05); filter: brightness(1.05); }
 
     /* ── Section FILMS — 3 scroll-scrub video cards ─────────── */
-    .films            { padding: clamp(4rem, 8vh, 8rem) clamp(1.25rem, 4vw, 4rem); background: #f1ede4; }
-    .films__head      { text-align: center; max-width: 60ch; margin: 0 auto clamp(2rem, 5vh, 4rem); }
-    .films__title     { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2rem, 4.5vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0.6rem 0 1rem; }
-    .films__title em  { font-style: italic; color: rgba(20, 17, 11, 0.55); }
-    .films__sub       { color: rgba(20, 17, 11, 0.6); font-size: 0.92rem; line-height: 1.55; }
+    .films            { padding: clamp(5rem, 10vh, 10rem) clamp(1.25rem, 4vw, 4rem); background: #f1ede4; }
+    .films__head      { text-align: center; max-width: 70ch; margin: 0 auto clamp(3rem, 6vh, 5rem); padding: 0 1rem; }
+
+    /* Eyebrow : numéro chapitre + rule + label, façon revue d'architecture */
+    .films__eyebrow         { display: inline-flex; align-items: center; gap: 0.9rem; margin-bottom: 1.6rem; color: rgba(20,17,11,0.62); font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; }
+    .films__eyebrow-num     { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: 16px; letter-spacing: 0; text-transform: none; color: rgba(20,17,11,0.88); }
+    .films__eyebrow-rule    { display: block; width: 38px; height: 1px; background: rgba(20,17,11,0.32); }
+
+    /* Titre éditorial — gros, deux lignes contrastées */
+    .films__title           { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2.4rem, 5.5vw, 4.6rem); letter-spacing: -0.025em; line-height: 1; margin: 0 0 1.4rem; }
+    .films__title-line      { display: block; }
+    .films__title-line--accent { font-style: italic; color: rgba(20,17,11,0.5); margin-top: 0.15em; }
+
+    /* Sous-titre italique en Fraunces, plus chuchoté */
+    .films__sub             { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: clamp(1rem, 1.55vw, 1.2rem); line-height: 1.5; color: rgba(20,17,11,0.58); margin: 0 auto; max-width: 50ch; }
+
+    /* Cue de scroll : ligne verticale fine + impulsion qui descend en boucle */
+    .films__cue             { display: block; margin: 2.6rem auto 0; width: 1px; height: 64px; background: rgba(20,17,11,0.14); position: relative; overflow: hidden; }
+    .films__cue-line        { position: absolute; top: 0; left: 0; width: 100%; height: 36%; background: linear-gradient(180deg, rgba(20,17,11,0) 0%, rgba(20,17,11,0.55) 50%, rgba(20,17,11,0) 100%); animation: films-cue 2.6s cubic-bezier(0.83, 0, 0.17, 1) infinite; will-change: transform; }
+    @keyframes films-cue {
+      0%   { transform: translateY(-100%); opacity: 0; }
+      20%  { opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateY(280%); opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) { .films__cue-line { animation: none; opacity: 1; } }
     .films__grid      { display: grid; gap: clamp(1.25rem, 2.5vw, 2rem); grid-template-columns: 1fr; max-width: 1320px; margin: 0 auto; align-items: stretch; }
     @media (min-width: 900px) { .films__grid { grid-template-columns: repeat(3, 1fr); } }
 
@@ -662,17 +683,24 @@
     ────────────────────────────────────────────────────────── -->
     <section class="films" id="films" data-section="films">
       <header class="films__head reveal">
-        <div class="chap-mark">
-          <span class="chap-mark__num">04b</span>
-          <span class="chap-mark__lab">Films</span>
+        <div class="films__eyebrow">
+          <span class="films__eyebrow-num">04</span>
+          <span class="films__eyebrow-rule" aria-hidden="true"></span>
+          <span class="films__eyebrow-lab">Films · scroll-scrub</span>
         </div>
+
         <h2 class="films__title">
-          Trois cadrages,
-          <em>au rythme du scroll.</em>
+          <span class="films__title-line">Trois cadrages,</span>
+          <em class="films__title-line films__title-line--accent">au rythme du scroll.</em>
         </h2>
+
         <p class="films__sub">
-          Faites défiler — chaque vidéo joue au rythme de votre lecture.
+          Faites défiler — chaque vidéo joue au rythme exact de votre lecture.
         </p>
+
+        <span class="films__cue" aria-hidden="true">
+          <span class="films__cue-line"></span>
+        </span>
       </header>
 
       <div class="films__grid">

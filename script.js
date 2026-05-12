@@ -510,27 +510,51 @@ window.addEventListener('DOMContentLoaded', () => {
   /* ───── 10 · GALERIE — génération + reveal + lightbox ───── */
   const galleryEl = document.querySelector('[data-gallery]');
 
+  // Galerie Maison Erpicum (Percke) — 9 photos signature de l'architecte (erpicum.org)
+  // + 17 photos commerciales Christie's (8715417_*).
   const galleryItems = [
-    { n: 1,  ts: '20260408150341', span: 'xl',   alt: 'Façade extérieure' },
-    { n: 6,  ts: '20260408150638', span: 'md',   alt: 'Vue intérieure 1' },
-    { n: 7,  ts: '20260408150638', span: 'md',   alt: 'Vue intérieure 2' },
-    { n: 9,  ts: '20260408150638', span: 'lg',   alt: 'Vue intérieure 3' },
-    { n: 10, ts: '20260408150638', span: 'sm',   alt: 'Vue intérieure 4' },
-    { n: 11, ts: '20260408150638', span: 'sm',   alt: 'Vue intérieure 5' },
-    { n: 12, ts: '20260408150639', span: 'wide', alt: 'Espace de vie' },
-    { n: 13, ts: '20260408150639', span: 'sm',   alt: 'Détail' },
-    { n: 15, ts: '20260408150639', span: 'sm',   alt: 'Salle de bains' },
-    { n: 16, ts: '20260408150640', span: 'md',   alt: 'Chambre' },
-    { n: 17, ts: '20260408150640', span: 'tall', alt: 'Couloir architectural' },
-    { n: 19, ts: '20260408150640', span: 'md',   alt: 'Bureau' },
-    { n: 20, ts: '20260408150640', span: 'md',   alt: 'Détail intérieur' },
-    { n: 23, ts: '20260408150641', span: 'lg',   alt: 'Espace bien-être' },
-    { n: 24, ts: '20260408150641', span: 'md',   alt: 'Détail extérieur' },
-    { n: 26, ts: '20260408150641', span: 'wide', alt: 'Jardin' },
-    { n: 27, ts: '20260408150641', span: 'md',   alt: 'Piscine' },
-    { n: 28, ts: '20260408150421', span: 'md',   alt: "Vue d'ensemble" },
+    // ── Photos officielles Bruno Erpicum (erpicum.org/architecture/percke-1/) ──
+    { src: 'assets/images/erpicum-org-01.jpg', span: 'xl',   alt: 'Percke — vue principale (Bruno Erpicum)' },
+    { src: 'assets/images/erpicum-org-02.jpg', span: 'md',   alt: 'Percke — détail architecture' },
+    { src: 'assets/images/erpicum-org-03.jpg', span: 'wide', alt: 'Percke — volumes en porte-à-faux' },
+    { src: 'assets/images/erpicum-org-04.jpg', span: 'sm',   alt: 'Percke — détail' },
+    { src: 'assets/images/erpicum-org-05.jpg', span: 'sm',   alt: 'Percke — détail' },
+    { src: 'assets/images/erpicum-org-06.jpg', span: 'md',   alt: 'Percke — espace intérieur' },
+    { src: 'assets/images/erpicum-org-07.jpg', span: 'lg',   alt: 'Percke — perspective architecturale' },
+    { src: 'assets/images/erpicum-org-08.jpg', span: 'md',   alt: 'Percke — détail' },
+    { src: 'assets/images/erpicum-org-09.jpg', span: 'tall', alt: 'Percke — coupe verticale' },
+
+    // ── Photos éditoriales L'Éventail / Immobilière Le Lion ──
+    { src: 'assets/images/eventail-01.jpg', span: 'wide', alt: 'Percke — vue éditoriale 1' },
+    { src: 'assets/images/eventail-02.jpg', span: 'lg',   alt: 'Percke — vue éditoriale 2' },
+    { src: 'assets/images/eventail-03.jpg', span: 'md',   alt: 'Percke — vue éditoriale 3' },
+    { src: 'assets/images/eventail-04.jpg', span: 'md',   alt: 'Percke — vue éditoriale 4' },
+    { src: 'assets/images/eventail-05.jpg', span: 'tall', alt: 'Percke — vue éditoriale 5' },
+    { src: 'assets/images/eventail-06.jpg', span: 'sm',   alt: 'Percke — vue éditoriale 6' },
+    { src: 'assets/images/eventail-07.jpg', span: 'sm',   alt: 'Percke — vue éditoriale 7' },
+    { src: 'assets/images/eventail-08.jpg', span: 'md',   alt: 'Percke — vue éditoriale 8' },
+    { src: 'assets/images/eventail-09.jpg', span: 'md',   alt: 'Percke — vue éditoriale 9' },
+
+    // ── Photos commerciales Christie's (réf. 12-0193) ──
+    { src: 'assets/images/8715417_1_20260122143307.jpg',  span: 'xl',   alt: 'Façade jardin' },
+    { src: 'assets/images/8715417_2_20260122143307.jpg',  span: 'wide', alt: 'Vue aérienne' },
+    { src: 'assets/images/8715417_3_20260122143308.jpg',  span: 'md',   alt: 'Façade depuis la haie' },
+    { src: 'assets/images/8715417_4_20260122143308.jpg',  span: 'lg',   alt: 'Mezzanine' },
+    { src: 'assets/images/8715417_5_20260122143308.jpg',  span: 'md',   alt: 'Terrasse panoramique' },
+    { src: 'assets/images/8715417_6_20260122143308.jpg',  span: 'md',   alt: 'Piscine extérieure' },
+    { src: 'assets/images/8715417_7_20260122143308.jpg',  span: 'tall', alt: 'Hall béton' },
+    { src: 'assets/images/8715417_8_20260122143308.jpg',  span: 'wide', alt: 'Cuisine' },
+    { src: 'assets/images/8715417_9_20260122143309.jpg',  span: 'md',   alt: 'Volume vide' },
+    { src: 'assets/images/8715417_10_20260122143309.jpg', span: 'md',   alt: 'Dressing' },
+    { src: 'assets/images/8715417_11_20260122143309.jpg', span: 'sm',   alt: 'Détail extérieur' },
+    { src: 'assets/images/8715417_12_20260122143310.jpg', span: 'sm',   alt: 'Détail piscine' },
+    { src: 'assets/images/8715417_13_20260122143310.jpg', span: 'lg',   alt: 'Piscine intérieure' },
+    { src: 'assets/images/8715417_14_20260122143310.jpg', span: 'tall', alt: 'Porte-à-faux sur la piscine' },
+    { src: 'assets/images/8715417_15_20260122143310.jpg', span: 'sm',   alt: 'Détail jardin' },
+    { src: 'assets/images/8715417_16_20260122143311.jpg', span: 'md',   alt: 'Façade vue large' },
+    { src: 'assets/images/8715417_17_20260122143311.jpg', span: 'md',   alt: 'Spa & hammam' },
   ];
-  const imgPath = (item) => `assets/images/8906584_${item.n}_${item.ts}.jpg`;
+  const imgPath = (item) => item.src;
 
   if (galleryEl) {
     // Met à jour le compteur affiché dans le header

@@ -22,32 +22,97 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 
-  <!-- Animations dynamiques (Ken Burns + parallax doux sur les médias statiques) -->
+  <!-- Animations dynamiques + composant slider avant/après -->
   <style>
     @keyframes erp-kb-in   { 0% { transform: scale(1.04) translate3d(0,0,0); } 100% { transform: scale(1.14) translate3d(-1.5%, -1%, 0); } }
     @keyframes erp-kb-pan  { 0% { transform: scale(1.08) translate3d(0,0,0); } 100% { transform: scale(1.18) translate3d(2%, -1.5%, 0); } }
     @keyframes erp-kb-zoom { 0% { transform: scale(1) translate3d(0,0,0); }    100% { transform: scale(1.10) translate3d(0, -2%, 0); } }
-    @keyframes erp-fade-up { 0% { opacity: 0; transform: translateY(18px); }    100% { opacity: 1; transform: translateY(0); } }
 
-    .hero__video      { animation: erp-kb-in   18s ease-in-out infinite alternate; transform-origin: 50% 50%; }
-    .strip__video     { animation: erp-kb-pan  22s ease-in-out infinite alternate; transform-origin: 60% 40%; }
-    .scrub__video     { animation: erp-kb-zoom 26s ease-in-out infinite alternate; transform-origin: 50% 60%; }
+    /* Ken Burns — uniquement sur les balises <img>. Les <video> jouent leur propre motion. */
+    img.hero__video    { animation: erp-kb-in   18s ease-in-out infinite alternate; transform-origin: 50% 50%; }
+    img.strip__video   { animation: erp-kb-pan  22s ease-in-out infinite alternate; transform-origin: 60% 40%; }
+    img.scrub__video   { animation: erp-kb-zoom 26s ease-in-out infinite alternate; transform-origin: 50% 60%; }
 
-    .stmt__attr       { margin-top: 1.2rem; font-size: 0.78rem; letter-spacing: 0.08em; opacity: 0.55; font-style: italic; }
+    /* Vidéos en hero/scrub — assurer object-fit + plein cadre, désactiver toute interaction */
+    video.hero__video, video.scrub__video, video.strip__video {
+      width: 100%; height: 100%; object-fit: cover; pointer-events: none;
+    }
+    /* Léger zoom sur les vidéos au survol pour rester vivant */
+    .hero__video--motion,
+    .scrub__video--motion { transition: transform 9s ease-out; transform: scale(1); will-change: transform; }
+    .hero:hover .hero__video--motion,
+    .scrub:hover .scrub__video--motion { transform: scale(1.04); }
 
-    /* Légère élégance sur les cards Espaces — élévation au survol */
-    .space            { transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1); }
-    .space:hover      { transform: translateY(-4px); }
-    .space__media img { transition: transform 1200ms cubic-bezier(0.16, 1, 0.3, 1); }
+    .stmt__attr        { margin-top: 1.2rem; font-size: 0.78rem; letter-spacing: 0.08em; opacity: 0.55; font-style: italic; }
+
+    /* Cards Espaces — élévation au survol */
+    .space             { transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1); }
+    .space:hover       { transform: translateY(-4px); }
+    .space__media img  { transition: transform 1200ms cubic-bezier(0.16, 1, 0.3, 1); }
     .space:hover .space__media img { transform: scale(1.04); }
 
     /* Galerie — micro-zoom au survol */
     .gallery__item img { transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1), filter 400ms ease; }
     .gallery__item:hover img { transform: scale(1.05); filter: brightness(1.05); }
 
+    /* ── Section COMPARAISON (avant / après) ────────────────────── */
+    .comparison        { padding: clamp(4rem, 8vh, 8rem) clamp(1.25rem, 4vw, 4rem); background: #faf7f0; }
+    .comparison__head  { text-align: center; max-width: 60ch; margin: 0 auto clamp(2rem, 5vh, 4rem); }
+    .comparison__title { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2rem, 4.5vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0.6rem 0 1rem; }
+    .comparison__title em { font-style: italic; color: rgba(20, 17, 11, 0.55); }
+    .comparison__sub   { color: rgba(20, 17, 11, 0.6); font-size: 0.92rem; line-height: 1.5; }
+    .comparison__grid  { display: grid; gap: clamp(1.25rem, 3vw, 2.4rem); grid-template-columns: 1fr; max-width: 1240px; margin: 0 auto; }
+    @media (min-width: 900px) { .comparison__grid { grid-template-columns: 1fr 1fr; } }
+
+    .ba-slider {
+      --pos: 50%;
+      position: relative; aspect-ratio: 3/2; overflow: hidden; border-radius: 6px;
+      cursor: ew-resize; user-select: none; touch-action: none;
+      box-shadow: 0 16px 60px rgba(20, 17, 11, 0.18);
+      background: #14110b;
+    }
+    .ba-slider__img    { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+    .ba-slider__clip   { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); will-change: clip-path; }
+    .ba-slider__handle {
+      position: absolute; top: 0; bottom: 0; left: var(--pos); transform: translateX(-50%);
+      width: 56px; background: transparent; border: 0; padding: 0; cursor: ew-resize;
+      z-index: 6; will-change: left;
+    }
+    .ba-slider__handle-bar  { position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 2px; background: white; box-shadow: 0 0 0 1px rgba(0,0,0,0.06); }
+    .ba-slider__handle-knob {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 48px; height: 48px; border-radius: 999px;
+      background: white; color: #14110b;
+      display: grid; place-items: center;
+      font-size: 18px; letter-spacing: 0.05em;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.28);
+      transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ba-slider:hover .ba-slider__handle-knob,
+    .ba-slider.is-dragging .ba-slider__handle-knob { transform: translate(-50%, -50%) scale(1.08); }
+    .ba-slider__label  {
+      position: absolute; top: 1rem; z-index: 5; pointer-events: none;
+      font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+      background: rgba(20, 17, 11, 0.78); color: white;
+      padding: 6px 11px; border-radius: 999px;
+      backdrop-filter: blur(8px);
+    }
+    .ba-slider__label--before { left: 1rem;  }
+    .ba-slider__label--after  { right: 1rem; }
+    .ba-slider__caption {
+      position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 5; pointer-events: none;
+      font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.06em;
+      background: rgba(255,255,255,0.94); color: #14110b;
+      padding: 6px 14px; border-radius: 999px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      white-space: nowrap;
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      .hero__video, .strip__video, .scrub__video,
-      .space, .space__media img, .gallery__item img { animation: none !important; transition: none !important; }
+      img.hero__video, img.strip__video, img.scrub__video,
+      .hero__video--motion, .scrub__video--motion,
+      .space, .space__media img, .gallery__item img,
+      .ba-slider__handle-knob { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
@@ -117,7 +182,9 @@
     ────────────────────────────────────────────────────────── -->
     <section class="hero" data-hero data-section="top">
       <div class="hero__media">
-        <img class="hero__video" data-hero-video src="assets/images/erpicum-org-01.jpg" alt="Maison Erpicum — porte-à-faux sur la piscine, signature Bruno Erpicum" />
+        <video class="hero__video hero__video--motion" autoplay muted loop playsinline preload="auto" poster="assets/images/erpicum-org-01.jpg">
+          <source src="assets/videos/porte-a-faux-piscine.mp4" type="video/mp4" />
+        </video>
         <div class="hero__veil" aria-hidden="true"></div>
       </div>
 
@@ -173,7 +240,9 @@
     ────────────────────────────────────────────────────────── -->
     <section class="strip" data-strip>
       <div class="strip__sticky">
-        <img class="strip__video" data-strip-video src="assets/images/erpicum-org-02.jpg" alt="" />
+        <video class="strip__video strip__video--motion" muted playsinline preload="metadata" poster="assets/images/erpicum-org-02.jpg" data-strip-video>
+          <source src="assets/videos/piscine-pergola.mp4" type="video/mp4" />
+        </video>
 
         <div class="strip__info">
           <div class="strip__head" data-strip-anim>
@@ -324,11 +393,62 @@
     </section>
 
     <!-- ─────────────────────────────────────────────────────────
+         02b · COMPARAISON — slider avant / après (vide vs meublé)
+    ────────────────────────────────────────────────────────── -->
+    <section class="comparison" id="comparison" data-section="comparison">
+      <header class="comparison__head reveal">
+        <div class="chap-mark">
+          <span class="chap-mark__num">02b</span>
+          <span class="chap-mark__lab">Mise en scène</span>
+        </div>
+        <h2 class="comparison__title">
+          Vide ou meublé,
+          <em>la même architecture.</em>
+        </h2>
+        <p class="comparison__sub">
+          Glissez la poignée centrale pour révéler les espaces dans une mise en scène contemporaine.
+        </p>
+      </header>
+
+      <div class="comparison__grid">
+        <figure class="ba-slider reveal" data-ba-slider style="--pos: 50%">
+          <img class="ba-slider__img ba-slider__img--after"  src="assets/images/meuble-mezzanine.png" alt="Mezzanine meublée — projection contemporaine" loading="lazy" />
+          <div class="ba-slider__clip">
+            <img class="ba-slider__img ba-slider__img--before" src="assets/images/8715417_4_20260122143308.jpg" alt="Mezzanine actuelle — espace brut" loading="lazy" />
+          </div>
+          <span class="ba-slider__label ba-slider__label--before">État actuel</span>
+          <span class="ba-slider__label ba-slider__label--after">Mise en scène</span>
+          <button class="ba-slider__handle" type="button" aria-label="Glisser pour comparer" data-ba-handle>
+            <span class="ba-slider__handle-bar" aria-hidden="true"></span>
+            <span class="ba-slider__handle-knob" aria-hidden="true">⇆</span>
+          </button>
+          <figcaption class="ba-slider__caption">La mezzanine · vue traversante</figcaption>
+        </figure>
+
+        <figure class="ba-slider reveal" data-ba-slider style="--pos: 50%">
+          <img class="ba-slider__img ba-slider__img--after"  src="assets/images/meuble-salon.png" alt="Séjour meublé — projection contemporaine" loading="lazy" />
+          <div class="ba-slider__clip">
+            <img class="ba-slider__img ba-slider__img--before" src="assets/images/8715417_9_20260122143309.jpg" alt="Séjour actuel — volume brut" loading="lazy" />
+          </div>
+          <span class="ba-slider__label ba-slider__label--before">État actuel</span>
+          <span class="ba-slider__label ba-slider__label--after">Mise en scène</span>
+          <button class="ba-slider__handle" type="button" aria-label="Glisser pour comparer" data-ba-handle>
+            <span class="ba-slider__handle-bar" aria-hidden="true"></span>
+            <span class="ba-slider__handle-knob" aria-hidden="true">⇆</span>
+          </button>
+          <figcaption class="ba-slider__caption">Le séjour · ouverture sur le jardin</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────────────────────
          FILM STRIP B — vers Espaces (vidéo 3.mp4)
     ────────────────────────────────────────────────────────── -->
     <section class="strip strip--tall" data-strip>
       <div class="strip__sticky">
-        <img class="strip__video" data-strip-video src="assets/images/erpicum-org-08.jpg" alt="" />
+        <video class="strip__video strip__video--motion" muted playsinline preload="metadata" poster="assets/images/erpicum-org-08.jpg" data-strip-video>
+          <source src="assets/videos/porte-a-faux-piscine-2.mp4" type="video/mp4" />
+        </video>
 
         <div class="strip__info">
           <div class="strip__head" data-strip-anim>
@@ -475,7 +595,9 @@
     ────────────────────────────────────────────────────────── -->
     <section class="scrub" id="film" data-scrub data-section="film">
       <div class="scrub__sticky">
-        <img class="scrub__video" data-scrub-video src="assets/images/erpicum-org-09.jpg" alt="Maison Erpicum — bassin vu d'en haut, ciel d'orage" />
+        <video class="scrub__video scrub__video--motion" autoplay muted loop playsinline preload="metadata" poster="assets/images/erpicum-org-09.jpg">
+          <source src="assets/videos/piscine-vertical.mp4" type="video/mp4" />
+        </video>
 
         <div class="scrub__overlay">
           <div class="chap-mark chap-mark--light" data-strip-anim>
@@ -709,5 +831,47 @@
   </footer>
 
   <script src="script.js"></script>
+
+  <!-- Composant slider avant/après — vanilla, drag/touch -->
+  <script>
+    (function () {
+      const sliders = document.querySelectorAll('[data-ba-slider]');
+      sliders.forEach((slider) => {
+        let dragging = false;
+        const setPos = (clientX) => {
+          const r = slider.getBoundingClientRect();
+          const pct = Math.max(0, Math.min(100, ((clientX - r.left) / r.width) * 100));
+          slider.style.setProperty('--pos', pct.toFixed(2) + '%');
+        };
+        const start = (clientX, e) => {
+          dragging = true;
+          slider.classList.add('is-dragging');
+          if (e && e.cancelable) e.preventDefault();
+          setPos(clientX);
+        };
+        const move = (clientX) => { if (!dragging) return; setPos(clientX); };
+        const stop = () => { dragging = false; slider.classList.remove('is-dragging'); };
+
+        slider.addEventListener('mousedown',  (e) => start(e.clientX, e));
+        slider.addEventListener('touchstart', (e) => { if (e.touches[0]) start(e.touches[0].clientX, e); }, { passive: false });
+        window.addEventListener('mousemove',  (e) => move(e.clientX));
+        window.addEventListener('touchmove',  (e) => { if (e.touches[0]) move(e.touches[0].clientX); }, { passive: true });
+        window.addEventListener('mouseup',    stop);
+        window.addEventListener('touchend',   stop);
+        window.addEventListener('touchcancel', stop);
+
+        // Keyboard support on the handle
+        const handle = slider.querySelector('[data-ba-handle]');
+        if (handle) {
+          handle.addEventListener('keydown', (e) => {
+            const cur = parseFloat(getComputedStyle(slider).getPropertyValue('--pos')) || 50;
+            const delta = e.shiftKey ? 10 : 4;
+            if (e.key === 'ArrowLeft')  { slider.style.setProperty('--pos', Math.max(0, cur - delta) + '%'); e.preventDefault(); }
+            if (e.key === 'ArrowRight') { slider.style.setProperty('--pos', Math.min(100, cur + delta) + '%'); e.preventDefault(); }
+          });
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

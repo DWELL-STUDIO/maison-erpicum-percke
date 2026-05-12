@@ -21,6 +21,35 @@
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <!-- Animations dynamiques (Ken Burns + parallax doux sur les médias statiques) -->
+  <style>
+    @keyframes erp-kb-in   { 0% { transform: scale(1.04) translate3d(0,0,0); } 100% { transform: scale(1.14) translate3d(-1.5%, -1%, 0); } }
+    @keyframes erp-kb-pan  { 0% { transform: scale(1.08) translate3d(0,0,0); } 100% { transform: scale(1.18) translate3d(2%, -1.5%, 0); } }
+    @keyframes erp-kb-zoom { 0% { transform: scale(1) translate3d(0,0,0); }    100% { transform: scale(1.10) translate3d(0, -2%, 0); } }
+    @keyframes erp-fade-up { 0% { opacity: 0; transform: translateY(18px); }    100% { opacity: 1; transform: translateY(0); } }
+
+    .hero__video      { animation: erp-kb-in   18s ease-in-out infinite alternate; transform-origin: 50% 50%; }
+    .strip__video     { animation: erp-kb-pan  22s ease-in-out infinite alternate; transform-origin: 60% 40%; }
+    .scrub__video     { animation: erp-kb-zoom 26s ease-in-out infinite alternate; transform-origin: 50% 60%; }
+
+    .stmt__attr       { margin-top: 1.2rem; font-size: 0.78rem; letter-spacing: 0.08em; opacity: 0.55; font-style: italic; }
+
+    /* Légère élégance sur les cards Espaces — élévation au survol */
+    .space            { transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1); }
+    .space:hover      { transform: translateY(-4px); }
+    .space__media img { transition: transform 1200ms cubic-bezier(0.16, 1, 0.3, 1); }
+    .space:hover .space__media img { transform: scale(1.04); }
+
+    /* Galerie — micro-zoom au survol */
+    .gallery__item img { transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1), filter 400ms ease; }
+    .gallery__item:hover img { transform: scale(1.05); filter: brightness(1.05); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero__video, .strip__video, .scrub__video,
+      .space, .space__media img, .gallery__item img { animation: none !important; transition: none !important; }
+    }
+  </style>
 </head>
 
 <body>
@@ -88,7 +117,7 @@
     ────────────────────────────────────────────────────────── -->
     <section class="hero" data-hero data-section="top">
       <div class="hero__media">
-        <img class="hero__video" data-hero-video src="assets/images/8715417_1_20260122143307.jpg" alt="Maison Erpicum — façade jardin" />
+        <img class="hero__video" data-hero-video src="assets/images/erpicum-org-01.jpg" alt="Maison Erpicum — porte-à-faux sur la piscine, signature Bruno Erpicum" />
         <div class="hero__veil" aria-hidden="true"></div>
       </div>
 
@@ -106,9 +135,7 @@
           <span class="hero__line hero__line--accent">d'architecture.</span>
         </h1>
         <p class="hero__lede">
-          Maison Erpicum. <strong>622&nbsp;m²</strong> habitables, posés sur
-          <strong>1.900&nbsp;m²</strong> de terrain, en lisière de la
-          quartier Prince d'Orange.
+          Une œuvre signée <strong>Bruno&nbsp;Erpicum</strong> (2007). <strong>622&nbsp;m²</strong> habitables, posés sur <strong>1.900&nbsp;m²</strong> de jardin paysager, dans le quartier Prince d'Orange à Uccle.
         </p>
       </div>
 
@@ -118,7 +145,7 @@
           <li><span class="hero__strip-num">622</span><span class="hero__strip-lab">m² habitables</span></li>
           <li><span class="hero__strip-num">1.900</span><span class="hero__strip-lab">m² de terrain</span></li>
           <li><span class="hero__strip-num">5</span><span class="hero__strip-lab">chambres</span></li>
-          <li><span class="hero__strip-num">PEB B</span><span class="hero__strip-lab">performance</span></li>
+          <li><span class="hero__strip-num">2007</span><span class="hero__strip-lab">Bruno Erpicum</span></li>
         </ul>
         <a href="#architecture" class="hero__cta">
           <span>Découvrir</span>
@@ -134,9 +161,10 @@
       <div class="stmt__inner reveal">
         <span class="eyebrow">— Manifesto</span>
         <h2 class="stmt__title">
-          On n'habite pas une villa.<br />
-          <em>On l'interprète.</em>
+          L'anneau&nbsp;: lien ou cercle.<br />
+          <em>Ici, les liens s'entrelacent.</em>
         </h2>
+        <p class="stmt__attr">— Bruno Erpicum, à propos de Percke (2007)</p>
       </div>
     </section>
 
@@ -145,7 +173,7 @@
     ────────────────────────────────────────────────────────── -->
     <section class="strip" data-strip>
       <div class="strip__sticky">
-        <img class="strip__video" data-strip-video src="assets/images/8715417_5_20260122143308.jpg" alt="" />
+        <img class="strip__video" data-strip-video src="assets/images/erpicum-org-02.jpg" alt="" />
 
         <div class="strip__info">
           <div class="strip__head" data-strip-anim>
@@ -153,19 +181,20 @@
             <span class="strip__eyebrow">Approche</span>
           </div>
           <h3 class="strip__title" data-strip-anim>
-            L'arrivée par la façade
-            <em>nord-est.</em>
+            Un volume blanc,
+            <em>en porte-à-faux.</em>
           </h3>
           <p class="strip__desc" data-strip-anim>
-            Une lame de pierre claire en porte-à-faux marque le seuil ;
-            un cheminement minéral guide jusqu'à l'entrée principale.
+            Le prisme supérieur protège les espaces privés et sert de terrasse.
+            En-dessous, la transparence : baies coulissantes pleine hauteur,
+            le séjour ouvert sur le jardin.
           </p>
         </div>
 
         <ul class="strip__meta" data-strip-anim>
-          <li><span>Matières</span><span>Pierre · bois · verre</span></li>
-          <li><span>Orientation</span><span>Nord-est</span></li>
-          <li><span>Façade</span><span>± 84 m²</span></li>
+          <li><span>Architecte</span><span>Bruno Erpicum</span></li>
+          <li><span>Année</span><span>2007</span></li>
+          <li><span>Concept</span><span>Anneau · porte-à-faux</span></li>
         </ul>
       </div>
     </section>
@@ -180,49 +209,52 @@
           <span class="chap-mark__lab">Architecture</span>
         </div>
         <h2 class="editorial__title">
-          Volumes nets, lumière domestiquée,
-          <em>matières silencieuses.</em>
+          Deux anneaux entrelacés,
+          <em>une seule maison.</em>
         </h2>
         <p class="editorial__sub">
-          Une œuvre contemporaine, pensée comme un manifeste.
+          Bruno Erpicum, Percke 1, 2007. Un manifeste construit.
         </p>
       </div>
 
       <div class="editorial__body">
         <div class="editorial__col reveal">
           <p class="editorial__para">
-            Conçue comme un manifeste contemporain, la Maison Erpicum joue sur la
-            précision des lignes et la respiration des plans. Chaque
-            ouverture cadre la nature alentour&nbsp;: la lumière n'est pas
-            invitée, elle est <em>composée</em>.
+            Au lieu-dit Percke, Bruno Erpicum dessine en 2007 deux
+            <em>anneaux</em> qui s'entrelacent. Le premier, posé au sol, déploie
+            les espaces de vie. Le second, suspendu, protège les volumes intimes
+            et offre une terrasse au plein ciel.
           </p>
           <p class="editorial__para">
-            Les volumes s'ouvrent sur un jardin paysager de 2.000&nbsp;m²,
-            traversés par une circulation centrale qui guide le regard
-            jusqu'à la canopée de la quartier Prince d'Orange.
+            La maison se lit comme une partition&nbsp;: trois niveaux desservis
+            par ascenseur, 622&nbsp;m² habitables, ouverts en grand sur 1.900&nbsp;m²
+            de jardin paysager. La piscine, extérieure et intérieure, traverse
+            l'œuvre de part en part.
           </p>
 
           <blockquote class="editorial__quote">
-            « Ici, l'architecture ne se montre pas. Elle se traverse. »
-            <cite>— Note de l'architecte</cite>
+            « L'anneau&nbsp;: lien ou cercle. Ici, les liens s'entrelacent.
+            L'un protège les espaces privés et sert de terrasse. L'autre
+            couvre la maison comme un toit. »
+            <cite>— Bruno Erpicum, à propos de Percke</cite>
           </blockquote>
         </div>
 
         <figure class="editorial__figure reveal" data-photo-anim>
           <img
-            src="assets/images/8715417_3_20260122143308.jpg"
-            alt="Façade contemporaine de la Maison Erpicum"
+            src="assets/images/erpicum-org-04.jpg"
+            alt="Escalier béton · circulation verticale"
             loading="lazy"
             data-parallax="0.18"
           />
-          <figcaption>Façade sud · matières minérales et bois clair</figcaption>
+          <figcaption>Circulation verticale · béton ciré, lumière en bandeau</figcaption>
         </figure>
       </div>
 
       <figure class="editorial__wide reveal" data-photo-anim>
         <img
-          src="assets/images/8715417_2_20260122143307.jpg"
-          alt="Vue d'ensemble extérieure"
+          src="assets/images/erpicum-org-09.jpg"
+          alt="Vue plongeante sur le bassin extérieur"
           loading="lazy"
           data-parallax="0.22"
         />
@@ -277,16 +309,16 @@
         </div>
         <div class="spec reveal">
           <span class="spec__lab">F · Performance énergétique</span>
-          <span class="spec__num">B</span>
+          <span class="spec__num">C</span>
         </div>
       </div>
 
       <div class="specs__footnote reveal">
         <ul>
-          <li><span>Année</span><span>Construction contemporaine</span></li>
-          <li><span>Cadre</span><span>Clos résidentiel privé</span></li>
-          <li><span>Environnement</span><span>Lisière quartier Prince d'Orange</span></li>
-          <li><span>Usage</span><span>Résidence principale</span></li>
+          <li><span>Architecte</span><span>Bruno Erpicum</span></li>
+          <li><span>Année</span><span>2007</span></li>
+          <li><span>Quartier</span><span>Prince d'Orange</span></li>
+          <li><span>Distinction</span><span>Maison-anneau · porte-à-faux</span></li>
         </ul>
       </div>
     </section>
@@ -296,28 +328,28 @@
     ────────────────────────────────────────────────────────── -->
     <section class="strip strip--tall" data-strip>
       <div class="strip__sticky">
-        <img class="strip__video" data-strip-video src="assets/images/8715417_8_20260122143308.jpg" alt="" />
+        <img class="strip__video" data-strip-video src="assets/images/erpicum-org-08.jpg" alt="" />
 
         <div class="strip__info">
           <div class="strip__head" data-strip-anim>
             <span class="strip__num">B → 03</span>
-            <span class="strip__eyebrow">Volumes</span>
+            <span class="strip__eyebrow">Cuisine</span>
           </div>
           <h3 class="strip__title" data-strip-anim>
-            La lumière
-            <em>composée.</em>
+            Un plan continu,
+            <em>quinze mètres.</em>
           </h3>
           <p class="strip__desc" data-strip-anim>
-            Hauteurs sous plafond doublées, ouvertures cadrées, circulation
-            traversante&nbsp;: chaque volume capte la lumière et la
-            redistribue.
+            Îlot monolithique en pierre cendrée, batterie d'électroménager Miele
+            intégré dans la paroi. Le plan de travail s'étire sur toute la longueur
+            de la pièce, sans rupture.
           </p>
         </div>
 
         <ul class="strip__meta" data-strip-anim>
-          <li><span>Plafond</span><span>jusqu'à 4,2 m</span></li>
-          <li><span>Baies</span><span>ouvertures continues</span></li>
-          <li><span>Étages</span><span>3 niveaux</span></li>
+          <li><span>Cuisine</span><span>Sur-mesure · Miele</span></li>
+          <li><span>Sol</span><span>Béton ciré poli</span></li>
+          <li><span>Étages</span><span>3 niveaux · ascenseur</span></li>
         </ul>
       </div>
     </section>
@@ -344,83 +376,83 @@
         <div class="spaces__track" data-spaces-track>
 
           <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_7_20260122143308.jpg" alt="Le séjour" loading="lazy" /></figure>
+            <figure class="space__media"><img src="assets/images/erpicum-org-01.jpg" alt="Le porte-à-faux" loading="lazy" /></figure>
             <div class="space__text">
               <span class="space__num">01 / 09</span>
-              <h3 class="space__name">Le séjour</h3>
-              <p class="space__desc">Pièce traversante, plafond toute hauteur, ouverte sur le jardin par une baie continue.</p>
+              <h3 class="space__name">Le porte-à-faux</h3>
+              <p class="space__desc">Le volume supérieur en surplomb au-dessus du bassin&nbsp;: la signature de l'écriture Erpicum.</p>
             </div>
           </article>
 
           <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_8_20260122143308.jpg" alt="La cuisine" loading="lazy" /></figure>
+            <figure class="space__media"><img src="assets/images/erpicum-org-08.jpg" alt="La cuisine" loading="lazy" /></figure>
             <div class="space__text">
               <span class="space__num">02 / 09</span>
               <h3 class="space__name">La cuisine</h3>
-              <p class="space__desc">Plan de travail monolithique, équipements professionnels, ouverture sur la salle à manger.</p>
+              <p class="space__desc">Plan de travail monolithique en pierre cendrée, quinze mètres sans rupture, batterie Miele encastrée.</p>
             </div>
           </article>
 
           <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_4_20260122143308.jpg" alt="La terrasse" loading="lazy" /></figure>
+            <figure class="space__media"><img src="assets/images/erpicum-org-07.jpg" alt="Le salon" loading="lazy" /></figure>
             <div class="space__text">
               <span class="space__num">03 / 09</span>
-              <h3 class="space__name">La terrasse</h3>
-              <p class="space__desc">Dalle de pierre suspendue au-dessus du bassin, prolongement direct du séjour.</p>
+              <h3 class="space__name">Le salon</h3>
+              <p class="space__desc">Pièce traversante, foyer ouvert, parquet patiné. La pièce de vie centrale, sous l'anneau.</p>
             </div>
           </article>
 
           <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_9_20260122143309.jpg" alt="La suite parentale" loading="lazy" /></figure>
+            <figure class="space__media"><img src="assets/images/erpicum-org-03.jpg" alt="La piscine intérieure" loading="lazy" /></figure>
             <div class="space__text">
               <span class="space__num">04 / 09</span>
-              <h3 class="space__name">La suite parentale</h3>
-              <p class="space__desc">Chambre, dressing, salle de bains et terrasse privée&nbsp;: un appartement dans l'appartement.</p>
+              <h3 class="space__name">La piscine intérieure</h3>
+              <p class="space__desc">Eau bleu turquoise, plafond angulaire en porte-à-faux, vis-à-vis sur le jardin par une longue baie.</p>
             </div>
           </article>
 
           <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_13_20260122143310.jpg" alt="Le bureau" loading="lazy" /></figure>
+            <figure class="space__media"><img src="assets/images/erpicum-org-04.jpg" alt="L'escalier" loading="lazy" /></figure>
             <div class="space__text">
               <span class="space__num">05 / 09</span>
-              <h3 class="space__name">Le bureau</h3>
-              <p class="space__desc">Volume calme, lumière nord, pensé pour la concentration et la lecture.</p>
+              <h3 class="space__name">L'escalier</h3>
+              <p class="space__desc">Marches en béton ciré, garde-corps lame blanche. La verticalité comme respiration.</p>
             </div>
           </article>
 
           <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_14_20260122143310.jpg" alt="Le fitness" loading="lazy" /></figure>
+            <figure class="space__media"><img src="assets/images/erpicum-org-06.jpg" alt="La mezzanine" loading="lazy" /></figure>
             <div class="space__text">
               <span class="space__num">06 / 09</span>
-              <h3 class="space__name">Le fitness</h3>
-              <p class="space__desc">Salle dédiée, miroir mural, sol technique, vue directe sur le jardin.</p>
+              <h3 class="space__name">La mezzanine</h3>
+              <p class="space__desc">Vide central sur le séjour, baies pleine hauteur, lecture traversante des trois niveaux.</p>
             </div>
           </article>
 
           <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_2_20260122143307.jpg" alt="Le home cinéma" loading="lazy" /></figure>
+            <figure class="space__media"><img src="assets/images/8715417_14_20260122143310.jpg" alt="La piscine extérieure" loading="lazy" /></figure>
             <div class="space__text">
               <span class="space__num">07 / 09</span>
-              <h3 class="space__name">Le home cinéma</h3>
-              <p class="space__desc">Pièce sombre, traitement acoustique, projection grande diagonale.</p>
+              <h3 class="space__name">La piscine extérieure</h3>
+              <p class="space__desc">Bassin allongé sous le porte-à-faux, dalles cendrées, écran végétal continu.</p>
             </div>
           </article>
 
           <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_5_20260122143308.jpg" alt="Le jardin" loading="lazy" /></figure>
+            <figure class="space__media"><img src="assets/images/8715417_5_20260122143308.jpg" alt="La terrasse couverte" loading="lazy" /></figure>
             <div class="space__text">
               <span class="space__num">08 / 09</span>
-              <h3 class="space__name">Le jardin</h3>
-              <p class="space__desc">2.000&nbsp;m² paysagés, essences locales, en dialogue avec la quartier Prince d'Orange.</p>
+              <h3 class="space__name">La terrasse couverte</h3>
+              <p class="space__desc">Sous le volume supérieur, dalles cendrées, baies coulissantes pleine hauteur. Une pièce extérieure, toute l'année.</p>
             </div>
           </article>
 
           <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_17_20260122143311.jpg" alt="La piscine" loading="lazy" /></figure>
+            <figure class="space__media"><img src="assets/images/8715417_17_20260122143311.jpg" alt="Le spa &amp; hammam" loading="lazy" /></figure>
             <div class="space__text">
               <span class="space__num">09 / 09</span>
-              <h3 class="space__name">La piscine</h3>
-              <p class="space__desc">Bassin extérieur dans l'axe du séjour, margelles minérales, eau comme un miroir.</p>
+              <h3 class="space__name">Le spa &amp; hammam</h3>
+              <p class="space__desc">Mosaïque cendrée, hammam vitré, ouverture directe sur la piscine intérieure.</p>
             </div>
           </article>
 
@@ -443,7 +475,7 @@
     ────────────────────────────────────────────────────────── -->
     <section class="scrub" id="film" data-scrub data-section="film">
       <div class="scrub__sticky">
-        <img class="scrub__video" data-scrub-video src="assets/images/8715417_2_20260122143307.jpg" alt="Maison Erpicum — vue aérienne" />
+        <img class="scrub__video" data-scrub-video src="assets/images/erpicum-org-09.jpg" alt="Maison Erpicum — bassin vu d'en haut, ciel d'orage" />
 
         <div class="scrub__overlay">
           <div class="chap-mark chap-mark--light" data-strip-anim>
@@ -451,16 +483,16 @@
             <span class="chap-mark__lab">Film</span>
           </div>
           <h2 class="scrub__title" data-strip-anim>
-            La villa, <em>en mouvement.</em>
+            Le bassin, <em>à la verticale.</em>
           </h2>
-          <p class="scrub__hint" data-strip-anim>Faites défiler pour traverser les espaces</p>
+          <p class="scrub__hint" data-strip-anim>Une lecture en plongée, sous le volume blanc</p>
         </div>
 
         <!-- Bloc meta enrichi (en haut-droit) -->
         <ul class="scrub__meta" data-strip-anim>
-          <li><span>Format</span><span>4K · upscalé</span></li>
-          <li><span>Captation</span><span>Mai 2026</span></li>
-          <li><span>Pinned</span><span>scrub vertical</span></li>
+          <li><span>Photographie</span><span>Archive Erpicum</span></li>
+          <li><span>Bassin</span><span>± 18 m de longueur</span></li>
+          <li><span>Profondeur</span><span>1,40 m</span></li>
         </ul>
 
         <!-- Indicateur de progression du scrub -->
@@ -477,8 +509,8 @@
       <div class="stmt__inner reveal">
         <span class="eyebrow">— Regard</span>
         <h2 class="stmt__title">
-          Dix-sept cadrages,<br />
-          <em>une seule lumière.</em>
+          Trente-cinq cadrages,<br />
+          <em>une seule écriture.</em>
         </h2>
       </div>
     </section>
@@ -488,7 +520,7 @@
     ────────────────────────────────────────────────────────── -->
     <section class="strip" data-strip>
       <div class="strip__sticky">
-        <img class="strip__video" data-strip-video src="assets/images/8715417_14_20260122143310.jpg" alt="" />
+        <img class="strip__video" data-strip-video src="assets/images/erpicum-org-05.jpg" alt="" />
 
         <div class="strip__info">
           <div class="strip__head" data-strip-anim>
@@ -543,27 +575,27 @@
     ────────────────────────────────────────────────────────── -->
     <section class="strip" data-strip>
       <div class="strip__sticky">
-        <img class="strip__video" data-strip-video src="assets/images/8715417_16_20260122143311.jpg" alt="" />
+        <img class="strip__video" data-strip-video src="assets/images/erpicum-org-03.jpg" alt="" />
 
         <div class="strip__info">
           <div class="strip__head" data-strip-anim>
             <span class="strip__num">D → 06</span>
-            <span class="strip__eyebrow">Jardin</span>
+            <span class="strip__eyebrow">Adresse</span>
           </div>
           <h3 class="strip__title" data-strip-anim>
-            En lisière de
-            <em>quartier Prince d'Orange.</em>
+            Prince d'Orange,
+            <em>Uccle.</em>
           </h3>
           <p class="strip__desc" data-strip-anim>
-            2.000&nbsp;m² paysagés en dialogue avec la forêt. Essences locales,
-            bassin miroir, intimité totale.
+            Le quartier le plus rare de Bruxelles. 1.900&nbsp;m² de terrain
+            paysager, à dix minutes du centre, aux portes du bois de la Cambre.
           </p>
         </div>
 
         <ul class="strip__meta" data-strip-anim>
-          <li><span>Jardin</span><span>2.000 m² paysagés</span></li>
-          <li><span>Piscine</span><span>Bassin extérieur</span></li>
-          <li><span>Forêt</span><span>Soignes · adjacente</span></li>
+          <li><span>Quartier</span><span>Prince d'Orange</span></li>
+          <li><span>Bruxelles</span><span>± 10 min</span></li>
+          <li><span>Aéroport</span><span>± 25 min</span></li>
         </ul>
       </div>
     </section>
@@ -574,8 +606,8 @@
     <section class="location" id="localisation" data-section="localisation">
       <figure class="location__media reveal" data-photo-anim>
         <img
-          src="assets/images/8715417_16_20260122143311.jpg"
-          alt="Vue extérieure de la villa au sein de son clos résidentiel"
+          src="assets/images/erpicum-org-01.jpg"
+          alt="Maison Erpicum dans son écrin paysager, Uccle"
           loading="lazy"
           data-parallax="0.25"
         />
@@ -595,18 +627,18 @@
           <em>quartier Prince d'Orange.</em>
         </h2>
         <p class="location__para">
-          Posée dans un clos résidentiel privé, à quelques minutes seulement
-          du centre de Bruxelles, la Maison Erpicum profite d'une adresse rare&nbsp;:
-          la quiétude d'un environnement boisé, la proximité immédiate des
-          écoles internationales, et le calme d'une commune préservée.
+          Le quartier Prince d'Orange est l'un des plus rares de Bruxelles&nbsp;:
+          rues bordées d'arbres centenaires, propriétés discrètes, frontière nord
+          du Bois de la Cambre. La Maison Erpicum y prend place sur un terrain
+          paysager de <strong>1.900&nbsp;m²</strong>, à quelques minutes du centre.
         </p>
 
         <ul class="location__list">
-          <li><strong>Cadre</strong><span>Clos résidentiel sécurisé</span></li>
-          <li><strong>Environnement</strong><span>quartier Prince d'Orange</span></li>
-          <li><strong>Bruxelles</strong><span>± 15 min</span></li>
+          <li><strong>Architecte</strong><span>Bruno Erpicum (2007)</span></li>
+          <li><strong>Quartier</strong><span>Prince d'Orange · Uccle</span></li>
+          <li><strong>Bruxelles centre</strong><span>± 10 min</span></li>
           <li><strong>Aéroport</strong><span>± 25 min</span></li>
-          <li><strong>Écoles internationales</strong><span>à proximité</span></li>
+          <li><strong>Bois de la Cambre</strong><span>adjacent</span></li>
         </ul>
       </div>
     </section>

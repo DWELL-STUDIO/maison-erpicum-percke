@@ -82,18 +82,17 @@
     .lectures__title { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2rem, 4.5vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0.6rem 0 1rem; }
     .lectures__title em { font-style: italic; color: rgba(20, 17, 11, 0.55); }
     .lectures__sub   { color: rgba(20, 17, 11, 0.6); font-size: 0.92rem; line-height: 1.55; max-width: 56ch; margin: 0 auto; }
-    .lectures__grid  { display: grid; gap: clamp(1.25rem, 2.5vw, 2rem); grid-template-columns: 1fr; max-width: 1320px; margin: 0 auto; }
-    @media (min-width: 760px)  { .lectures__grid { grid-template-columns: 1fr 1fr; } }
-    @media (min-width: 1180px) { .lectures__grid { grid-template-columns: repeat(4, 1fr); } }
+    .lectures__grid  { display: grid; gap: clamp(1.5rem, 3vw, 2.4rem); grid-template-columns: 1fr; max-width: 1640px; margin: 0 auto; }
+    @media (min-width: 820px) { .lectures__grid { grid-template-columns: 1fr 1fr; } }
 
-    /* Each pair cycles A↔B on 10s; transitions differ by theme:
+    /* Each pair cycles A↔B on 12s; transitions differ by theme:
        - .fade-pair--theme-furnish : HORIZONTAL WIPE (clip-path, left-to-right)
        - .fade-pair--theme-night   : VERTICAL CURTAIN (clip-path, top-to-bottom — like dusk descending) */
     .fade-pair {
-      --fp-cycle: 10s;
+      --fp-cycle: 12s;
       --fp-offset: 0s;
-      position: relative; aspect-ratio: 4/3; overflow: hidden; border-radius: 6px;
-      background: #14110b; box-shadow: 0 14px 50px rgba(20,17,11,0.18);
+      position: relative; aspect-ratio: 16/10; overflow: hidden; border-radius: 8px;
+      background: #14110b; box-shadow: 0 22px 70px rgba(20,17,11,0.24);
       isolation: isolate;
     }
     .fade-pair__img {
@@ -140,11 +139,11 @@
 
     /* Chips that label which state is currently visible */
     .fade-pair__chip {
-      position: absolute; top: 1rem; left: 1rem; z-index: 4; pointer-events: none;
-      font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
-      background: rgba(20, 17, 11, 0.78); color: white;
-      padding: 6px 11px; border-radius: 999px;
-      backdrop-filter: blur(8px);
+      position: absolute; top: 1.4rem; left: 1.4rem; z-index: 4; pointer-events: none;
+      font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; font-weight: 500;
+      background: rgba(20, 17, 11, 0.82); color: white;
+      padding: 8px 14px; border-radius: 999px;
+      backdrop-filter: blur(10px);
       will-change: opacity;
     }
     .fade-pair__chip--a { animation: fp-chip-a var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
@@ -155,11 +154,11 @@
     .fade-pair--theme-furnish .fade-pair__chip--b { background: rgba(232, 226, 213, 0.96); color: #14110b; }
 
     .fade-pair__caption {
-      position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 4; pointer-events: none;
-      font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.06em;
-      background: rgba(255,255,255,0.94); color: #14110b;
-      padding: 6px 14px; border-radius: 999px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      position: absolute; bottom: 1.4rem; left: 50%; transform: translateX(-50%); z-index: 4; pointer-events: none;
+      font-family: 'Inter', sans-serif; font-size: 13px; letter-spacing: 0.06em; font-weight: 500;
+      background: rgba(255,255,255,0.96); color: #14110b;
+      padding: 8px 18px; border-radius: 999px;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.18);
       white-space: nowrap;
     }
 

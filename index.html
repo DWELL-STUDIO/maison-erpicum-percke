@@ -55,6 +55,27 @@
     .gallery__item img { transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1), filter 400ms ease; }
     .gallery__item:hover img { transform: scale(1.05); filter: brightness(1.05); }
 
+    /* ── Section FILMS — 3 scroll-scrub video cards ─────────── */
+    .films            { padding: clamp(4rem, 8vh, 8rem) clamp(1.25rem, 4vw, 4rem); background: #f1ede4; }
+    .films__head      { text-align: center; max-width: 60ch; margin: 0 auto clamp(2rem, 5vh, 4rem); }
+    .films__title     { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2rem, 4.5vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0.6rem 0 1rem; }
+    .films__title em  { font-style: italic; color: rgba(20, 17, 11, 0.55); }
+    .films__sub       { color: rgba(20, 17, 11, 0.6); font-size: 0.92rem; line-height: 1.55; }
+    .films__grid      { display: grid; gap: clamp(1.25rem, 2.5vw, 2rem); grid-template-columns: 1fr; max-width: 1320px; margin: 0 auto; align-items: stretch; }
+    @media (min-width: 900px) { .films__grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .film-card        { position: relative; display: flex; flex-direction: column; min-height: 60vh; border-radius: 6px; overflow: hidden; background: #14110b; box-shadow: 0 14px 50px rgba(20,17,11,0.22); transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 600ms cubic-bezier(0.16, 1, 0.3, 1); }
+    .film-card:hover  { transform: translateY(-4px); box-shadow: 0 22px 70px rgba(20,17,11,0.32); }
+    .film-card__media { position: relative; flex: 1 1 auto; min-height: 320px; }
+    .film-card__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+    .film-card__veil  { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,17,11,0) 50%, rgba(20,17,11,0.78) 100%); pointer-events: none; }
+    .film-card__caption { position: relative; padding: 1.25rem 1.4rem 1.4rem; color: #fdfcf9; background: #14110b; }
+    .film-card__num   { display: block; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(253,252,249,0.5); margin-bottom: 0.6rem; }
+    .film-card__title { font-family: 'Fraunces', serif; font-weight: 300; font-size: 1.4rem; line-height: 1.15; letter-spacing: -0.01em; margin: 0 0 0.5rem; }
+    .film-card__desc  { font-family: 'Inter', sans-serif; font-size: 0.86rem; line-height: 1.55; color: rgba(253,252,249,0.74); margin: 0; }
+    .film-card--vertical .film-card__media { aspect-ratio: 3/4; min-height: 0; }
+    @media (max-width: 899px) { .film-card { min-height: 0; } .film-card__media { aspect-ratio: 4/3; min-height: 0; } }
+
     /* ── Section LECTURES (auto-fade pairs) ───────────────────── */
     .lectures        { padding: clamp(4rem, 8vh, 8rem) clamp(1.25rem, 4vw, 4rem); background: #faf7f0; }
     .lectures__head  { text-align: center; max-width: 64ch; margin: 0 auto clamp(2rem, 5vh, 4rem); }
@@ -65,7 +86,9 @@
     @media (min-width: 760px)  { .lectures__grid { grid-template-columns: 1fr 1fr; } }
     @media (min-width: 1180px) { .lectures__grid { grid-template-columns: repeat(4, 1fr); } }
 
-    /* Each pair cycles A→B→A on 10s; offsets via --fp-offset stagger them. */
+    /* Each pair cycles A↔B on 10s; transitions differ by theme:
+       - .fade-pair--theme-furnish : HORIZONTAL WIPE (clip-path, left-to-right)
+       - .fade-pair--theme-night   : VERTICAL CURTAIN (clip-path, top-to-bottom — like dusk descending) */
     .fade-pair {
       --fp-cycle: 10s;
       --fp-offset: 0s;
@@ -75,20 +98,43 @@
     }
     .fade-pair__img {
       position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
-      will-change: opacity, transform; transform-origin: 50% 50%;
+      will-change: clip-path, transform; transform-origin: 50% 50%;
     }
-    /* Slow Ken-Burns layered on top of the cross-fade */
     .fade-pair__img--a {
-      animation: fp-fade-a var(--fp-cycle) ease-in-out infinite var(--fp-offset),
-                 fp-kb-a   var(--fp-cycle) ease-in-out infinite var(--fp-offset);
+      animation: fp-kb-a var(--fp-cycle) ease-in-out infinite var(--fp-offset);
     }
     .fade-pair__img--b {
-      animation: fp-fade-b var(--fp-cycle) ease-in-out infinite var(--fp-offset),
-                 fp-kb-b   var(--fp-cycle) ease-in-out infinite var(--fp-offset);
+      animation: fp-kb-b var(--fp-cycle) ease-in-out infinite var(--fp-offset);
     }
 
-    @keyframes fp-fade-a { 0%, 38% { opacity: 1; } 50%, 88% { opacity: 0; } 100% { opacity: 1; } }
-    @keyframes fp-fade-b { 0%, 38% { opacity: 0; } 50%, 88% { opacity: 1; } 100% { opacity: 0; } }
+    /* Horizontal wipe — meublé en balayage gauche→droite */
+    .fade-pair--theme-furnish .fade-pair__img--b {
+      clip-path: inset(0 100% 0 0);
+      animation: fp-wipe-in var(--fp-cycle) cubic-bezier(0.7, 0, 0.3, 1) infinite var(--fp-offset),
+                 fp-kb-b    var(--fp-cycle) ease-in-out infinite var(--fp-offset);
+    }
+    @keyframes fp-wipe-in {
+      0%, 35%   { clip-path: inset(0 100% 0 0); }
+      45%, 85%  { clip-path: inset(0 0 0 0); }
+      95%, 100% { clip-path: inset(0 0 0 100%); }
+    }
+
+    /* Vertical curtain — nuit descendante (haut→bas, comme un crépuscule) */
+    .fade-pair--theme-night .fade-pair__img--b {
+      clip-path: inset(100% 0 0 0);
+      animation: fp-curtain-in var(--fp-cycle) cubic-bezier(0.6, 0, 0.4, 1) infinite var(--fp-offset),
+                 fp-kb-b       var(--fp-cycle) ease-in-out infinite var(--fp-offset);
+    }
+    @keyframes fp-curtain-in {
+      0%, 35%   { clip-path: inset(100% 0 0 0); }
+      45%, 85%  { clip-path: inset(0 0 0 0); }
+      95%, 100% { clip-path: inset(0 0 100% 0); }
+    }
+
+    /* Chip animations driven by simple opacity (synced to wipe/curtain timing) */
+    @keyframes fp-chip-a { 0%, 38% { opacity: 1; } 50%, 88% { opacity: 0; } 100% { opacity: 1; } }
+    @keyframes fp-chip-b { 0%, 38% { opacity: 0; } 50%, 88% { opacity: 1; } 100% { opacity: 0; } }
+
     @keyframes fp-kb-a   { 0% { transform: scale(1.04); } 50% { transform: scale(1.10); } 100% { transform: scale(1.04); } }
     @keyframes fp-kb-b   { 0% { transform: scale(1.10); } 50% { transform: scale(1.04); } 100% { transform: scale(1.10); } }
 
@@ -101,8 +147,8 @@
       backdrop-filter: blur(8px);
       will-change: opacity;
     }
-    .fade-pair__chip--a { animation: fp-fade-a var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
-    .fade-pair__chip--b { animation: fp-fade-b var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
+    .fade-pair__chip--a { animation: fp-chip-a var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
+    .fade-pair__chip--b { animation: fp-chip-b var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
 
     /* Night theme: warm chip on the night side */
     .fade-pair--theme-night .fade-pair__chip--b { background: rgba(218, 164, 70, 0.92); color: #14110b; letter-spacing: 0.24em; }
@@ -123,8 +169,9 @@
 
     @media (prefers-reduced-motion: reduce) {
       .fade-pair__img, .fade-pair__chip { animation: none !important; }
-      .fade-pair__img--b, .fade-pair__chip--b { opacity: 1; }
-      .fade-pair__img--a, .fade-pair__chip--a { opacity: 0; }
+      .fade-pair__img--b { clip-path: inset(0) !important; }
+      .fade-pair__chip--b { opacity: 1; }
+      .fade-pair__chip--a { opacity: 0; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -157,8 +204,11 @@
       <li class="rail__item" data-rail-target="espaces">
         <a href="#espaces"><span class="rail__num">04</span><span class="rail__lab">Espaces</span></a>
       </li>
+      <li class="rail__item" data-rail-target="films">
+        <a href="#films"><span class="rail__num">05a</span><span class="rail__lab">Films</span></a>
+      </li>
       <li class="rail__item" data-rail-target="film">
-        <a href="#film"><span class="rail__num">05</span><span class="rail__lab">Film</span></a>
+        <a href="#film"><span class="rail__num">05b</span><span class="rail__lab">Film</span></a>
       </li>
       <li class="rail__item" data-rail-target="galerie">
         <a href="#galerie"><span class="rail__num">06</span><span class="rail__lab">Galerie</span></a>
@@ -205,8 +255,8 @@
     ────────────────────────────────────────────────────────── -->
     <section class="hero" data-hero data-section="top">
       <div class="hero__media">
-        <video class="hero__video hero__video--motion" autoplay muted loop playsinline preload="auto" poster="assets/images/erpicum-org-01.jpg">
-          <source src="assets/videos/facade-piscine-large.mp4" type="video/mp4" />
+        <video class="hero__video" data-hero-video muted playsinline preload="auto" poster="assets/images/erpicum-org-01.jpg">
+          <source src="assets/videos/aerien-drone.mp4" type="video/mp4" />
         </video>
         <div class="hero__veil" aria-hidden="true"></div>
       </div>
@@ -578,12 +628,77 @@
     </section>
 
     <!-- ─────────────────────────────────────────────────────────
+         04b · FILMS — trois moments scrubés au scroll
+    ────────────────────────────────────────────────────────── -->
+    <section class="films" id="films" data-section="films">
+      <header class="films__head reveal">
+        <div class="chap-mark">
+          <span class="chap-mark__num">04b</span>
+          <span class="chap-mark__lab">Films</span>
+        </div>
+        <h2 class="films__title">
+          Trois cadrages,
+          <em>au rythme du scroll.</em>
+        </h2>
+        <p class="films__sub">
+          Faites défiler — chaque vidéo joue au rythme de votre lecture.
+        </p>
+      </header>
+
+      <div class="films__grid">
+
+        <article class="film-card strip" data-strip>
+          <div class="film-card__media">
+            <video class="film-card__video strip__video" data-strip-video muted playsinline preload="metadata" poster="assets/images/erpicum-org-02.jpg">
+              <source src="assets/videos/piscine-pergola.mp4" type="video/mp4" />
+            </video>
+            <div class="film-card__veil"></div>
+          </div>
+          <figcaption class="film-card__caption">
+            <span class="film-card__num">A · 01</span>
+            <h3 class="film-card__title">La piscine, à l'ombre.</h3>
+            <p class="film-card__desc">Sous la pergola du porte-à-faux, la piscine se déploie en longueur. Eau turquoise, transats minéraux, écran végétal continu.</p>
+          </figcaption>
+        </article>
+
+        <article class="film-card strip" data-strip>
+          <div class="film-card__media">
+            <video class="film-card__video strip__video" data-strip-video muted playsinline preload="metadata" poster="assets/images/erpicum-org-01.jpg">
+              <source src="assets/videos/porte-a-faux-piscine.mp4" type="video/mp4" />
+            </video>
+            <div class="film-card__veil"></div>
+          </div>
+          <figcaption class="film-card__caption">
+            <span class="film-card__num">B · 02</span>
+            <h3 class="film-card__title">Le porte-à-faux.</h3>
+            <p class="film-card__desc">Le volume blanc en surplomb, signature de l'écriture Erpicum. Une lecture diagonale du bassin.</p>
+          </figcaption>
+        </article>
+
+        <article class="film-card film-card--vertical strip" data-strip>
+          <div class="film-card__media">
+            <video class="film-card__video strip__video" data-strip-video muted playsinline preload="metadata" poster="assets/images/erpicum-org-09.jpg">
+              <source src="assets/videos/piscine-vertical.mp4" type="video/mp4" />
+            </video>
+            <div class="film-card__veil"></div>
+          </div>
+          <figcaption class="film-card__caption">
+            <span class="film-card__num">C · 03</span>
+            <h3 class="film-card__title">Le bassin, à la verticale.</h3>
+            <p class="film-card__desc">Cadrage vertical sur la longueur du bassin. Le porte-à-faux écrase l'horizon, le ciel reste le seul personnage.</p>
+          </figcaption>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────────────────────
          04 · FILM — vidéo cinématique scrubbée pleine page
     ────────────────────────────────────────────────────────── -->
     <section class="scrub" id="film" data-scrub data-section="film">
       <div class="scrub__sticky">
-        <video class="scrub__video scrub__video--motion" autoplay muted loop playsinline preload="metadata" poster="assets/images/erpicum-org-09.jpg">
-          <source src="assets/videos/aerien-drone.mp4" type="video/mp4" />
+        <video class="scrub__video" data-scrub-video muted playsinline preload="metadata" poster="assets/images/erpicum-org-01.jpg">
+          <source src="assets/videos/facade-piscine-large.mp4" type="video/mp4" />
         </video>
 
         <div class="scrub__overlay">

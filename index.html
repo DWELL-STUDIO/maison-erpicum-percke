@@ -151,20 +151,23 @@
       <li class="rail__item" data-rail-target="mesures">
         <a href="#mesures"><span class="rail__num">02</span><span class="rail__lab">Mesures</span></a>
       </li>
+      <li class="rail__item" data-rail-target="lectures">
+        <a href="#lectures"><span class="rail__num">03</span><span class="rail__lab">Lectures</span></a>
+      </li>
       <li class="rail__item" data-rail-target="espaces">
-        <a href="#espaces"><span class="rail__num">03</span><span class="rail__lab">Espaces</span></a>
+        <a href="#espaces"><span class="rail__num">04</span><span class="rail__lab">Espaces</span></a>
       </li>
       <li class="rail__item" data-rail-target="film">
-        <a href="#film"><span class="rail__num">04</span><span class="rail__lab">Film</span></a>
+        <a href="#film"><span class="rail__num">05</span><span class="rail__lab">Film</span></a>
       </li>
       <li class="rail__item" data-rail-target="galerie">
-        <a href="#galerie"><span class="rail__num">05</span><span class="rail__lab">Galerie</span></a>
+        <a href="#galerie"><span class="rail__num">06</span><span class="rail__lab">Galerie</span></a>
       </li>
       <li class="rail__item" data-rail-target="localisation">
-        <a href="#localisation"><span class="rail__num">06</span><span class="rail__lab">Localisation</span></a>
+        <a href="#localisation"><span class="rail__num">07</span><span class="rail__lab">Localisation</span></a>
       </li>
       <li class="rail__item" data-rail-target="contact">
-        <a href="#contact"><span class="rail__num">07</span><span class="rail__lab">Visite</span></a>
+        <a href="#contact"><span class="rail__num">08</span><span class="rail__lab">Visite</span></a>
       </li>
     </ol>
   </aside>
@@ -186,8 +189,10 @@
     </a>
     <nav class="nav__links" aria-label="Navigation principale">
       <a href="#architecture">Architecture</a>
-      <a href="#film">Film</a>
+      <a href="#mesures">Mesures</a>
+      <a href="#lectures">Lectures</a>
       <a href="#espaces">Espaces</a>
+      <a href="#film">Film</a>
       <a href="#galerie">Galerie</a>
       <a href="#localisation">Localisation</a>
     </nav>
@@ -201,7 +206,7 @@
     <section class="hero" data-hero data-section="top">
       <div class="hero__media">
         <video class="hero__video hero__video--motion" autoplay muted loop playsinline preload="auto" poster="assets/images/erpicum-org-01.jpg">
-          <source src="assets/videos/porte-a-faux-piscine.mp4" type="video/mp4" />
+          <source src="assets/videos/facade-piscine-large.mp4" type="video/mp4" />
         </video>
         <div class="hero__veil" aria-hidden="true"></div>
       </div>
@@ -259,7 +264,7 @@
     <section class="strip" data-strip>
       <div class="strip__sticky">
         <video class="strip__video strip__video--motion" muted playsinline preload="metadata" poster="assets/images/erpicum-org-02.jpg" data-strip-video>
-          <source src="assets/videos/piscine-pergola.mp4" type="video/mp4" />
+          <source src="assets/videos/allee-arrivee.mp4" type="video/mp4" />
         </video>
 
         <div class="strip__info">
@@ -268,13 +273,13 @@
             <span class="strip__eyebrow">Approche</span>
           </div>
           <h3 class="strip__title" data-strip-anim>
-            Un volume blanc,
-            <em>en porte-à-faux.</em>
+            L'arrivée,
+            <em>entre les haies.</em>
           </h3>
           <p class="strip__desc" data-strip-anim>
-            Le prisme supérieur protège les espaces privés et sert de terrasse.
-            En-dessous, la transparence : baies coulissantes pleine hauteur,
-            le séjour ouvert sur le jardin.
+            Un cheminement minéral entre les haies de hêtres taillées guide jusqu'à
+            l'entrée. La maison se révèle progressivement, dissimulée dans la
+            végétation du Prince d'Orange.
           </p>
         </div>
 
@@ -346,19 +351,6 @@
           data-parallax="0.22"
         />
       </figure>
-    </section>
-
-    <!-- ─────────────────────────────────────────────────────────
-         STMT — Précision (avant Mesures, fond noir)
-    ────────────────────────────────────────────────────────── -->
-    <section class="stmt stmt--dark" data-stmt>
-      <div class="stmt__inner reveal">
-        <span class="eyebrow eyebrow--light">— Précision</span>
-        <h2 class="stmt__title">
-          Tout, ici,<br />
-          <em>est mesuré.</em>
-        </h2>
-      </div>
     </section>
 
     <!-- ─────────────────────────────────────────────────────────
@@ -470,45 +462,12 @@
     </section>
 
     <!-- ─────────────────────────────────────────────────────────
-         FILM STRIP B — vers Espaces (vidéo 3.mp4)
-    ────────────────────────────────────────────────────────── -->
-    <section class="strip strip--tall" data-strip>
-      <div class="strip__sticky">
-        <video class="strip__video strip__video--motion" muted playsinline preload="metadata" poster="assets/images/erpicum-org-08.jpg" data-strip-video>
-          <source src="assets/videos/porte-a-faux-piscine-2.mp4" type="video/mp4" />
-        </video>
-
-        <div class="strip__info">
-          <div class="strip__head" data-strip-anim>
-            <span class="strip__num">B → 03</span>
-            <span class="strip__eyebrow">Cuisine</span>
-          </div>
-          <h3 class="strip__title" data-strip-anim>
-            Un plan continu,
-            <em>quinze mètres.</em>
-          </h3>
-          <p class="strip__desc" data-strip-anim>
-            Îlot monolithique en pierre cendrée, batterie d'électroménager Miele
-            intégré dans la paroi. Le plan de travail s'étire sur toute la longueur
-            de la pièce, sans rupture.
-          </p>
-        </div>
-
-        <ul class="strip__meta" data-strip-anim>
-          <li><span>Cuisine</span><span>Sur-mesure · Miele</span></li>
-          <li><span>Sol</span><span>Béton ciré poli</span></li>
-          <li><span>Étages</span><span>3 niveaux · ascenseur</span></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ─────────────────────────────────────────────────────────
          03 · ESPACES — scroll horizontal pinné, 9 univers
     ────────────────────────────────────────────────────────── -->
     <section class="spaces" id="espaces" data-spaces data-section="espaces">
       <header class="spaces__head reveal">
         <div class="chap-mark">
-          <span class="chap-mark__num">03</span>
+          <span class="chap-mark__num">04</span>
           <span class="chap-mark__lab">Espaces</span>
         </div>
         <h2 class="spaces__title">
@@ -624,25 +583,25 @@
     <section class="scrub" id="film" data-scrub data-section="film">
       <div class="scrub__sticky">
         <video class="scrub__video scrub__video--motion" autoplay muted loop playsinline preload="metadata" poster="assets/images/erpicum-org-09.jpg">
-          <source src="assets/videos/piscine-vertical.mp4" type="video/mp4" />
+          <source src="assets/videos/aerien-drone.mp4" type="video/mp4" />
         </video>
 
         <div class="scrub__overlay">
           <div class="chap-mark chap-mark--light" data-strip-anim>
-            <span class="chap-mark__num">04</span>
+            <span class="chap-mark__num">05</span>
             <span class="chap-mark__lab">Film</span>
           </div>
           <h2 class="scrub__title" data-strip-anim>
-            Le bassin, <em>à la verticale.</em>
+            Survol, <em>au cœur des frondaisons.</em>
           </h2>
-          <p class="scrub__hint" data-strip-anim>Une lecture en plongée, sous le volume blanc</p>
+          <p class="scrub__hint" data-strip-anim>Vue drone — le toit photovoltaïque, le bassin, le parc</p>
         </div>
 
         <!-- Bloc meta enrichi (en haut-droit) -->
         <ul class="scrub__meta" data-strip-anim>
-          <li><span>Photographie</span><span>Archive Erpicum</span></li>
-          <li><span>Bassin</span><span>± 18 m de longueur</span></li>
-          <li><span>Profondeur</span><span>1,40 m</span></li>
+          <li><span>Captation</span><span>Drone aérien</span></li>
+          <li><span>Toiture</span><span>Photovoltaïque</span></li>
+          <li><span>Terrain</span><span>1.900 m² paysagés</span></li>
         </ul>
 
         <!-- Indicateur de progression du scrub -->
@@ -653,56 +612,13 @@
     </section>
 
     <!-- ─────────────────────────────────────────────────────────
-         STMT — Regard (préface galerie)
-    ────────────────────────────────────────────────────────── -->
-    <section class="stmt" data-stmt>
-      <div class="stmt__inner reveal">
-        <span class="eyebrow">— Regard</span>
-        <h2 class="stmt__title">
-          Trente-cinq cadrages,<br />
-          <em>une seule écriture.</em>
-        </h2>
-      </div>
-    </section>
-
-    <!-- ─────────────────────────────────────────────────────────
-         FILM STRIP C — vers Galerie (vidéo 4.mp4)
-    ────────────────────────────────────────────────────────── -->
-    <section class="strip" data-strip>
-      <div class="strip__sticky">
-        <img class="strip__video" data-strip-video src="assets/images/erpicum-org-05.jpg" alt="" />
-
-        <div class="strip__info">
-          <div class="strip__head" data-strip-anim>
-            <span class="strip__num">C → 05</span>
-            <span class="strip__eyebrow">Matières</span>
-          </div>
-          <h3 class="strip__title" data-strip-anim>
-            Une palette
-            <em>silencieuse.</em>
-          </h3>
-          <p class="strip__desc" data-strip-anim>
-            Pierre, chêne brossé, métal patiné&nbsp;: les matières sont peu
-            nombreuses, choisies pour vieillir avec grâce.
-          </p>
-        </div>
-
-        <ul class="strip__meta" data-strip-anim>
-          <li><span>Sols</span><span>Pierre · chêne brossé</span></li>
-          <li><span>Murs</span><span>Enduits minéraux</span></li>
-          <li><span>Finitions</span><span>Sur-mesure</span></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ─────────────────────────────────────────────────────────
          05 · GALERIE — 18 vues, lightbox
     ────────────────────────────────────────────────────────── -->
     <section class="gallery" id="galerie" data-section="galerie">
       <header class="gallery__head reveal">
         <div class="gallery__head-row">
           <div class="chap-mark">
-            <span class="chap-mark__num">05</span>
+            <span class="chap-mark__num">06</span>
             <span class="chap-mark__lab">Galerie</span>
           </div>
           <span class="gallery__count">
@@ -717,36 +633,6 @@
 
       <div class="gallery__grid" data-gallery>
         <!-- Les images sont injectées par script.js -->
-      </div>
-    </section>
-
-    <!-- ─────────────────────────────────────────────────────────
-         FILM STRIP D — vers Localisation (vidéo 5.mp4)
-    ────────────────────────────────────────────────────────── -->
-    <section class="strip" data-strip>
-      <div class="strip__sticky">
-        <img class="strip__video" data-strip-video src="assets/images/erpicum-org-03.jpg" alt="" />
-
-        <div class="strip__info">
-          <div class="strip__head" data-strip-anim>
-            <span class="strip__num">D → 06</span>
-            <span class="strip__eyebrow">Adresse</span>
-          </div>
-          <h3 class="strip__title" data-strip-anim>
-            Prince d'Orange,
-            <em>Uccle.</em>
-          </h3>
-          <p class="strip__desc" data-strip-anim>
-            Le quartier le plus rare de Bruxelles. 1.900&nbsp;m² de terrain
-            paysager, à dix minutes du centre, aux portes du bois de la Cambre.
-          </p>
-        </div>
-
-        <ul class="strip__meta" data-strip-anim>
-          <li><span>Quartier</span><span>Prince d'Orange</span></li>
-          <li><span>Bruxelles</span><span>± 10 min</span></li>
-          <li><span>Aéroport</span><span>± 25 min</span></li>
-        </ul>
       </div>
     </section>
 
@@ -769,7 +655,7 @@
 
       <div class="location__content reveal">
         <div class="chap-mark">
-          <span class="chap-mark__num">06</span>
+          <span class="chap-mark__num">07</span>
           <span class="chap-mark__lab">Localisation</span>
         </div>
         <h2 class="location__title">
@@ -799,7 +685,7 @@
     <section class="contact" id="contact" data-section="contact">
       <div class="contact__inner reveal">
         <div class="chap-mark chap-mark--light">
-          <span class="chap-mark__num">07</span>
+          <span class="chap-mark__num">08</span>
           <span class="chap-mark__lab">Visite privée</span>
         </div>
         <h2 class="contact__title">

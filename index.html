@@ -7,11 +7,11 @@
   <title>Maison Erpicum — Christie's International Real Estate</title>
   <meta name="description" content="Villa contemporaine signée Bruno Erpicum, quartier Prince d'Orange à Uccle. 622 m² habitables, 1.900 m² de terrain paysager, 5 chambres, piscines intérieure et extérieure." />
 
-  <!-- Google Fonts : Fraunces (display) + Inter (body) -->
+  <!-- Google Fonts : Cormorant Garamond (display, terminaisons sharper) + Inter Tight (body, géométrique) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter+Tight:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
     rel="stylesheet"
   />
 
@@ -24,6 +24,19 @@
 
   <!-- Animations dynamiques + composant slider avant/après -->
   <style>
+    /* ── Typographie unifiée : Inter Tight (Apple-style / SF inspired) ──
+       Override des 3 variables font de style.css pour utiliser Inter Tight
+       partout (designed by Rasmus Andersson, très proche de San Francisco). */
+    :root {
+      --display:      'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      --sans:         'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      --serif-italic: 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    }
+    body { font-family: 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; }
+    /* Les éléments en italique gardent leur italique, mais en Inter Tight italique */
+    em, i, .stmt__title em, .editorial__title em, .strip__title em, .scrub__title em,
+    .location__title em, .lectures__title em, .ff-slide__hero em { font-style: italic; }
+
     @keyframes erp-kb-in   { 0% { transform: scale(1.04) translate3d(0,0,0); } 100% { transform: scale(1.14) translate3d(-1.5%, -1%, 0); } }
     @keyframes erp-kb-pan  { 0% { transform: scale(1.08) translate3d(0,0,0); } 100% { transform: scale(1.18) translate3d(2%, -1.5%, 0); } }
     @keyframes erp-kb-zoom { 0% { transform: scale(1) translate3d(0,0,0); }    100% { transform: scale(1.10) translate3d(0, -2%, 0); } }
@@ -36,6 +49,218 @@
     /* Vidéos en hero/scrub — assurer object-fit + plein cadre, désactiver toute interaction */
     video.hero__video, video.scrub__video, video.strip__video {
       width: 100%; height: 100%; object-fit: cover; pointer-events: none;
+    }
+    /* Hero — couleurs plus saturées et contrastées (le drone vert du jardin doit sortir) */
+    video.hero__video--vivid {
+      filter: saturate(1.28) contrast(1.08) brightness(1.04);
+    }
+    /* Voile hero légèrement allégé pour laisser passer la couleur sous le texte */
+    .hero__veil {
+      background:
+        linear-gradient(180deg,
+          rgba(20, 19, 15, 0.22) 0%,
+          rgba(20, 19, 15, 0.06) 35%,
+          rgba(20, 19, 15, 0.55) 100%) !important;
+    }
+    /* Masque tous les "points de repère" : chap-marks dans les en-têtes
+       (« 01 · Architecture », « 02b · Lectures », etc.) */
+    .chap-mark { display: none !important; }
+
+    /* ── ARCHITECTURE compacte (édito plus court, titre plus modeste) ── */
+    .editorial { padding: clamp(2.5rem, 5vh, 4rem) var(--gutter) !important; }
+    .editorial__intro {
+      margin-bottom: clamp(1.5rem, 3vh, 2.5rem) !important;
+    }
+    .editorial__title {
+      font-size: clamp(1.8rem, 4vw, 3.4rem) !important;
+      max-width: 22ch !important;
+    }
+    .editorial__para {
+      font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+      max-width: 56ch;
+    }
+    .editorial__quote {
+      margin-top: 1.25rem !important;
+      font-size: clamp(0.95rem, 1.1vw, 1.1rem) !important;
+    }
+    .editorial__figure { max-height: 60vh; }
+    .editorial__figure img { aspect-ratio: 4/3; object-fit: cover; }
+
+    /* ── FICHE TECHNIQUE compacte (sous le hero, avant le strip) ── */
+    .specs { padding: clamp(2rem, 4vh, 3.5rem) var(--gutter) !important; }
+    .specs__head {
+      padding-bottom: 0.85rem !important;
+      margin-bottom: clamp(1.5rem, 3vh, 2.25rem) !important;
+    }
+    .specs__title { font-size: clamp(1.25rem, 2.4vw, 1.9rem) !important; }
+    .specs .spec {
+      min-height: clamp(90px, 12vh, 130px) !important;
+      padding-top: clamp(0.9rem, 1.6vw, 1.4rem) !important;
+      padding-bottom: clamp(0.9rem, 1.6vw, 1.4rem) !important;
+      gap: 0.55rem !important;
+    }
+    .specs .spec__num { font-size: clamp(1.8rem, 4.2vw, 3.6rem) !important; }
+    .specs .spec__lab { font-size: 0.62rem !important; }
+    .specs__footnote {
+      margin-top: clamp(1rem, 2.5vh, 1.75rem) !important;
+      padding-top: 0.9rem !important;
+    }
+    .specs__footnote li { font-size: 0.78rem !important; }
+
+    /* ── STRIP "Arrivée" — vidéo en cadre, à côté du texte, fond clair (papier) ── */
+    .strip {
+      height: auto !important;
+      background: var(--paper) !important;
+      color: var(--ink) !important;
+    }
+    .strip__sticky {
+      position: relative !important;
+      height: auto !important;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      align-items: stretch; /* la colonne texte épouse la hauteur de la vidéo */
+      gap: clamp(2rem, 5vw, 5rem);
+      padding: clamp(3rem, 7vh, 5rem) var(--gutter);
+    }
+    /* Voile dégradé inutile dans ce nouveau layout */
+    .strip__sticky::after { display: none; }
+
+    /* Vidéo : petit cadre à droite, secondaire au texte */
+    .strip .strip__video {
+      position: relative !important;
+      inset: auto !important;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3;
+      max-height: 50vh;
+      object-fit: cover;
+      border-radius: 10px;
+      transform: none !important;
+      box-shadow: 0 18px 50px rgba(20, 17, 11, 0.15);
+    }
+    /* Texte : colonne de gauche, hauteur = vidéo, contenu centré verticalement */
+    .strip .strip__info {
+      position: static !important;
+      max-width: none;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+    }
+    .strip .strip__title {
+      color: var(--ink);
+      max-width: 16ch;
+      font-size: clamp(2.4rem, 5.4vw, 5rem); /* un peu plus grand pour respirer dans la hauteur */
+    }
+    .strip .strip__title em { color: rgba(20, 17, 11, 0.55); }
+    .strip .strip__desc  { color: rgba(20, 17, 11, 0.68); max-width: 38ch; }
+
+    @media (max-width: 880px) {
+      .strip__sticky {
+        grid-template-columns: 1fr !important;
+      }
+      .strip .strip__video { order: -1; } /* vidéo au-dessus du texte */
+    }
+
+    /* ── NAV — pilule LIQUID GLASS qui suit le hover (style villa rhode v2) ──
+       Une seule pilule flottante (.nav__pill) qui se déplace en transform
+       d'un lien à l'autre selon le hover ; si pas de hover, elle marque la
+       section active. 3 couches : blur+distortion fractal, voile chaud,
+       highlight insets. */
+    .nav .nav__links { position: relative; gap: 0; padding: 0; background: none; box-shadow: none; }
+    .nav .nav__links::before { content: none; }
+
+    .nav .nav__links a {
+      position: relative;
+      padding: 0.55rem 1rem;
+      opacity: 1;
+      transition: color var(--t-fast) var(--ease-out, ease);
+    }
+    /* Désactive le soulignement animé d'origine — la pilule fait le job */
+    .nav .nav__links a::after { content: none !important; }
+    /* Lien actif (sous la pilule) — texte assombri pour mieux ressortir */
+    .nav.is-scrolled .nav__links a.is-pill-target { color: var(--ink); font-weight: 600; }
+    .nav .nav__links a.is-pill-target { color: var(--paper); }
+
+    /* La pilule glass — positionnée en JS via transform translate + width/height */
+    .nav__pill {
+      position: absolute;
+      top: 0; left: 0;
+      width: 0; height: 0;
+      border-radius: 9999px;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 0;
+      box-shadow: 0 4px 16px rgba(20, 19, 15, 0.12);
+      transition:
+        transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+        width    360ms cubic-bezier(0.22, 1, 0.36, 1),
+        height   360ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity  220ms ease;
+      will-change: transform, width, height, opacity;
+    }
+    .nav__pill.is-visible { opacity: 1; }
+
+    /* Les 3 couches de la pilule, empilées dans la même rondeur */
+    .nav__pill-blur,
+    .nav__pill-tint,
+    .nav__pill-highlight {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
+    .nav__pill-blur {
+      backdrop-filter: blur(8px) saturate(150%);
+      -webkit-backdrop-filter: blur(8px) saturate(150%);
+      filter: url(#glass-distortion);
+      isolation: isolate;
+    }
+    .nav__pill-tint {
+      background: rgba(245, 234, 211, 0.45); /* voile chaud (papier) */
+    }
+    .nav__pill-highlight {
+      box-shadow:
+        inset 1.5px 1.5px 1px 0 rgba(255, 255, 255, 0.60),
+        inset -1px -1px 1px 1px rgba(255, 255, 255, 0.35);
+    }
+
+    /* Les liens passent au-dessus de la pilule */
+    .nav .nav__links a { z-index: 1; }
+    /* Mobile : .nav__links caché par style.css ≤ 720px, pilule disparaît avec */
+
+    /* Section STMT — phrase manifeste centrée */
+    .stmt__inner--center { text-align: center; }
+    .stmt__title--center {
+      max-width: none;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Hero — titre "Percke" calé à gauche, légèrement descendu, typographie display, blanc */
+    .hero__content--center {
+      text-align: left;
+      justify-self: start;
+      max-width: none;
+      width: auto;
+      margin: 0;
+      transform: translateY(clamp(3rem, 10vh, 7rem)); /* descend le titre */
+    }
+    .hero__title--white {
+      color: var(--paper) !important;
+      margin: 0 !important;
+      text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35); /* lisibilité sur la vidéo */
+    }
+    /* Surtitre "Villa Erpicum" : nettement plus petit que "Percke" en-dessous */
+    .hero__line--sub {
+      display: block;
+      font-size: clamp(1.2rem, 1.9vw, 1.8rem);
+      font-weight: 400;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      margin-bottom: clamp(0.6rem, 1.2vh, 1.2rem);
+      line-height: 1;
     }
     /* Léger zoom sur les vidéos au survol pour rester vivant */
     .hero__video--motion,
@@ -55,187 +280,524 @@
     .gallery__item img { transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1), filter 400ms ease; }
     .gallery__item:hover img { transform: scale(1.05); filter: brightness(1.05); }
 
-    /* ── Section FILMS — 3 vidéos en plein écran qui se fondent au scroll ── */
-    .films-fs           { background: #14110b; color: #fdfcf9; position: relative; }
-    .films-fs__track    { position: relative; height: 320vh; }   /* 3 slides + 20vh exit buffer */
-    .films-fs__stage    { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+    /* Galerie en MASONRY (CSS columns) — chaque image garde son ratio natif,
+       les items s'empilent verticalement par colonnes, aucun espace vide. */
+    .gallery__grid {
+      display: block !important;            /* annule le grid d'origine */
+      column-count: 4;
+      column-gap: clamp(0.5rem, 0.9vw, 1rem);
+      grid-template-columns: none !important;
+      grid-auto-rows: auto !important;
+    }
+    .gallery__item {
+      display: block !important;
+      width: 100%;
+      margin: 0 0 clamp(0.5rem, 0.9vw, 1rem);
+      break-inside: avoid;
+      -webkit-column-break-inside: avoid;
+      page-break-inside: avoid;
+      grid-column: auto !important;          /* neutralise les spans 12-cols */
+      grid-row: auto !important;
+    }
+    .gallery__item img {
+      width: 100%;
+      height: auto !important;               /* hauteur naturelle = pas de crop */
+      object-fit: initial !important;
+      display: block;
+    }
+    @media (max-width: 1100px) { .gallery__grid { column-count: 3; } }
+    @media (max-width: 720px)  { .gallery__grid { column-count: 2; } }
+    @media (max-width: 480px)  { .gallery__grid { column-count: 1; } }
 
-    .ff-slide           { position: absolute; inset: 0; opacity: 0; will-change: opacity; }
-    .ff-slide[data-ff-slide="0"] { opacity: 1; }   /* slide initiale par défaut */
-    .ff-slide__video    { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
-    .ff-slide__veil     {
-      position: absolute; inset: 0; pointer-events: none;
-      background:
-        linear-gradient(180deg, rgba(20,17,11,0.42) 0%, rgba(20,17,11,0) 26%, rgba(20,17,11,0) 56%, rgba(20,17,11,0.78) 100%),
-        linear-gradient(90deg,  rgba(20,17,11,0.32) 0%, rgba(20,17,11,0) 38%);
+    /* ── Section FILMS — 2 vidéos en grille large sur fond clair, autoplay-loop muet ── */
+    .films-fs {
+      background: #f4f1ec;            /* fond clair (cream chaud) */
+      color: var(--ink);
+      padding: clamp(7rem, 14vh, 12rem) clamp(0.5rem, 1.2vw, 1.4rem);
+    }
+    .films-fs__head { max-width: 70ch; margin: 0 auto clamp(4rem, 8vh, 6rem); text-align: center; }
+    .films-fs__eyebrow {
+      display: inline-block;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: clamp(1.4rem, 2.6vw, 2.4rem);
+      letter-spacing: 0.32em; text-transform: uppercase; font-weight: 500;
+      color: rgba(20, 17, 11, 0.78);
+      margin-bottom: 0;
+    }
+    .films-fs__title {
+      font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+      font-weight: 300; font-size: clamp(2.2rem, 5vw, 4.2rem);
+      letter-spacing: -0.02em; line-height: 1.05;
+      margin: 0 0 0.8rem; color: var(--ink);
+    }
+    .films-fs__title em { font-style: italic; color: rgba(20, 17, 11, 0.55); }
+    .films-fs__sub {
+      color: rgba(20, 17, 11, 0.62);
+      font-size: 1rem; line-height: 1.6;
+      margin: 0 auto; max-width: 60ch;
+    }
+    .films-fs__grid {
+      max-width: none;                /* full-bleed presque jusqu'aux bords */
+      margin: 0 auto;
+      display: grid; gap: clamp(0.8rem, 1.4vw, 1.4rem);
+      /* 2fr / 1fr : avec aspect-ratio 16/10 (paysage) et 4/5 (portrait),
+         ce ratio fait correspondre exactement la hauteur des deux cartes. */
+      grid-template-columns: 2fr 1fr;
+      align-items: start;
+    }
+    @media (max-width: 880px) {
+      .films-fs__grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    }
+    .ff-card {
+      position: relative; overflow: hidden; aspect-ratio: 4 / 5;
+      border-radius: 10px; background: #1a1610; isolation: isolate;
+      box-shadow: 0 22px 60px rgba(20, 17, 11, 0.22);  /* ombre adaptée au fond clair */
+      transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ff-card:hover { transform: translateY(-4px); box-shadow: 0 32px 80px rgba(20, 17, 11, 0.30); }
+    .ff-card--landscape { aspect-ratio: 16 / 10; }
+
+    /* Section FILM (04) — neutralise le scrub : hauteur normale 100vh + vidéo en
+       autoplay-loop dans son sticky (qui devient inutile à cette hauteur). */
+    .scrub.scrub--autoplay {
+      height: 100vh;
+      height: 100svh;
+    }
+    .scrub.scrub--autoplay .scrub__sticky {
+      position: relative;
+      top: auto;
+      height: 100%;
+    }
+    .ff-card__video {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block; pointer-events: none;
+    }
+    .ff-card::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(180deg, rgba(20,17,11,0) 45%, rgba(20,17,11,0.78) 100%);
+    }
+    .ff-card__cap {
+      position: absolute; bottom: clamp(1rem, 2vh, 1.6rem); left: clamp(1rem, 2vw, 1.6rem); right: clamp(1rem, 2vw, 1.6rem);
+      z-index: 2; color: #fdfcf9;
+    }
+    .ff-card__num {
+      display: block;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(253, 252, 249, 0.7);
+      margin-bottom: 0.55rem;
+    }
+    .ff-card__title {
+      font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+      font-weight: 300; font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+      letter-spacing: -0.01em; line-height: 1.15;
+      margin: 0 0 0.35rem;
+    }
+    .ff-card__desc {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.82rem; line-height: 1.5;
+      color: rgba(253, 252, 249, 0.72);
+      margin: 0;
     }
 
-    /* Caption standard (slides 2 & 3) — bas-gauche */
-    .ff-slide__caption  {
-      position: absolute; bottom: clamp(2.5rem, 7vh, 5rem); left: clamp(1.5rem, 5vw, 5rem); right: clamp(1.5rem, 5vw, 5rem);
-      max-width: 56ch; z-index: 4; color: #fdfcf9;
-    }
-    .ff-slide__num      { display: block; font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(253,252,249,0.62); margin-bottom: 0.9rem; }
-    .ff-slide__title    { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2rem, 4.4vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0 0 0.8rem; }
-    .ff-slide__desc     { font-family: 'Inter', sans-serif; font-size: clamp(0.92rem, 1.05vw, 1.05rem); line-height: 1.55; color: rgba(253,252,249,0.78); max-width: 46ch; margin: 0; }
 
-    /* Caption "lead" (slide 1) — plus dense, façon générique de section */
-    .ff-slide__caption--lead { max-width: 64ch; }
-    .ff-slide__eyebrow  { display: inline-flex; align-items: center; gap: 0.7rem; font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(253,252,249,0.7); margin-bottom: 1.6rem; }
-    .ff-slide__hero     { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2.4rem, 5.6vw, 4.8rem); letter-spacing: -0.025em; line-height: 1; margin: 0 0 1.2rem; color: #fdfcf9; }
-    .ff-slide__hero em  { font-style: italic; color: rgba(253,252,249,0.66); display: block; margin-top: 0.15em; }
-    .ff-slide__lede     { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: clamp(1rem, 1.5vw, 1.18rem); line-height: 1.5; color: rgba(253,252,249,0.7); max-width: 50ch; margin: 0 0 2rem; }
-    .ff-slide__meta     { display: flex; flex-direction: column; gap: 0.4rem; padding-top: 1.4rem; border-top: 1px solid rgba(253,252,249,0.16); max-width: 46ch; }
-
-    /* Indicateur (top right) */
-    .ff-progress        {
-      position: absolute; top: clamp(1.2rem, 3vh, 2rem); right: clamp(1.2rem, 3vw, 2rem); z-index: 5;
-      display: flex; align-items: center; gap: 0.5rem;
-      background: rgba(20,17,11,0.42); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      padding: 0.7rem 1rem 0.7rem 1.1rem; border-radius: 999px;
-      font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
-      color: rgba(253,252,249,0.92);
-    }
-    .ff-progress__num   { font-size: 1.1rem; min-width: 1.6em; text-align: center; }
-    .ff-progress__sep   { opacity: 0.45; }
-    .ff-progress__total { font-size: 0.95rem; opacity: 0.7; margin-right: 0.6rem; }
-    .ff-progress__rail  { width: 80px; height: 2px; background: rgba(253,252,249,0.2); border-radius: 99px; overflow: hidden; }
-    .ff-progress__fill  { width: 0%; height: 100%; background: rgba(253,252,249,0.92); transform-origin: left center; will-change: width; transition: width 80ms linear; }
-    @media (max-width: 600px) { .ff-progress__rail { width: 48px; } }
-
-
-    /* ── Section LECTURES (auto-fade pairs) ───────────────────── */
+    /* ── Section LECTURES (zigzag éditorial, hover/tap toggle) ───── */
     .lectures        { padding: clamp(4rem, 8vh, 8rem) clamp(1.25rem, 4vw, 4rem); background: #faf7f0; }
-    .lectures__head  { text-align: center; max-width: 64ch; margin: 0 auto clamp(2rem, 5vh, 4rem); }
-    .lectures__title { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(2rem, 4.5vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0.6rem 0 1rem; }
+    .lectures__head  { text-align: center; max-width: 64ch; margin: 0 auto clamp(3rem, 6vh, 5rem); }
+    .lectures__title { font-family: var(--display); font-weight: 600; font-size: clamp(2rem, 4.5vw, 3.6rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0.6rem 0 1rem; }
     .lectures__title em { font-style: italic; color: rgba(20, 17, 11, 0.55); }
     .lectures__sub   { color: rgba(20, 17, 11, 0.6); font-size: 0.92rem; line-height: 1.55; max-width: 56ch; margin: 0 auto; }
-    .lectures__grid  { display: grid; gap: clamp(1.5rem, 3vw, 2.4rem); grid-template-columns: 1fr; max-width: 1640px; margin: 0 auto; }
-    @media (min-width: 820px) { .lectures__grid { grid-template-columns: 1fr 1fr; } }
+    .lectures__rows  {
+      display: flex; flex-direction: column;
+      gap: clamp(3rem, 7vh, 6rem);
+      max-width: 1480px; margin: 0 auto;
+    }
 
-    /* Each pair cycles A→B→A en ping-pong (16s) avec easing expo —
-       le wipe/curtain rentre, tient, puis ressort par le même bord (pas de snap).
-       - .fade-pair--theme-furnish : HORIZONTAL WIPE (clip-path, gauche→droite)
-       - .fade-pair--theme-night   : VERTICAL CURTAIN (clip-path, haut→bas, crépuscule) */
-    .fade-pair {
-      --fp-cycle: 16s;
-      --fp-offset: 0s;
-      --fp-ease: cubic-bezier(0.83, 0, 0.17, 1); /* expo in-out */
-      position: relative; aspect-ratio: 16/10; overflow: hidden; border-radius: 8px;
-      background: #14110b; box-shadow: 0 22px 70px rgba(20,17,11,0.24);
+    .lecture-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: clamp(2rem, 5vw, 5rem);
+    }
+    .lecture-row--img-left  .lecture-pair       { grid-column: 1; grid-row: 1; }
+    .lecture-row--img-left  .lecture-row__text  { grid-column: 2; grid-row: 1; }
+    .lecture-row--img-right .lecture-pair       { grid-column: 2; grid-row: 1; }
+    .lecture-row--img-right .lecture-row__text  { grid-column: 1; grid-row: 1; }
+
+    .lecture-row__text { max-width: 44ch; }
+    .lecture-row__eyebrow {
+      display: inline-block; font-size: 0.7rem; letter-spacing: 0.24em;
+      text-transform: uppercase; color: rgba(20, 17, 11, 0.55);
+      margin-bottom: 1.1rem;
+    }
+    .lecture-row__title {
+      font-family: var(--display); font-weight: 600;
+      font-size: clamp(1.8rem, 3.6vw, 3rem);
+      line-height: 1.05; letter-spacing: -0.025em;
+      margin: 0 0 1rem; color: var(--ink);
+    }
+    .lecture-row__title em { font-style: italic; font-weight: 400; color: rgba(20, 17, 11, 0.55); }
+    .lecture-row__desc {
+      font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+      line-height: 1.6; color: rgba(20, 17, 11, 0.7);
+    }
+    /* Composition éditoriale magazine :
+       en-tête (numéro italique + filet horizontal qui s'étend),
+       label principal,
+       indicateurs animés synchro sur le crossfade. */
+    .lecture-row__text {
+      display: flex; flex-direction: column;
+      align-items: center;            /* centre tous les blocs dans la colonne */
+      text-align: center;
+      gap: 0;
+      margin-left: auto; margin-right: auto;
+    }
+    .lecture-row__text .lecture-row__head { justify-content: center; }
+    .lecture-row__text .lecture-row__rule { display: none; } /* filet horizontal incohérent en centré */
+    .lecture-row__text .lecture-states { align-items: center; }
+    .lecture-row__text .lecture-state { justify-content: center; }
+    .lecture-row__head {
+      display: flex; align-items: baseline;
+      gap: 1.25rem;
+      margin: 0 0 0.6rem;
+    }
+    .lecture-row__num {
+      font-family: var(--display);
+      font-weight: 200;
+      font-style: italic;
+      font-size: clamp(2.4rem, 5vw, 4.4rem);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: rgba(20, 17, 11, 0.85);
+      font-feature-settings: "tnum";
+    }
+    .lecture-row__rule {
+      flex: 1; height: 1px;
+      background: rgba(20, 17, 11, 0.25);
+      align-self: center;
+      transform: translateY(-0.15em);
+      max-width: 120px;
+    }
+    .lecture-row__label {
+      font-family: var(--display); font-weight: 500;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      line-height: 1.02; letter-spacing: -0.025em;
+      margin: 0 0 1.6rem; color: var(--ink);
+    }
+
+    /* Liste des deux états avec dot animée synchro sur le crossfade image */
+    .lecture-states {
+      list-style: none; padding: 0; margin: 0;
+      display: flex; flex-direction: column;
+      gap: 0.55rem;
+    }
+    .lecture-state {
+      display: flex; align-items: center;
+      gap: 0.85rem;
+      font-family: var(--display);
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    /* Indicateur : filet horizontal court qui "remplit" quand l'état est actif
+       (et se vide quand il s'éteint). Beaucoup plus éditorial qu'une pastille. */
+    .lecture-state__dot {
+      position: relative;
+      width: 28px; height: 1px;
+      background: rgba(20, 17, 11, 0.18);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .lecture-state__dot::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--ink);
+      transform-origin: left center;
+      transform: scaleX(0);
+    }
+    .lecture-state--a .lecture-state__dot::after {
+      animation: lp-line-a var(--lp-cycle) var(--lp-ease) infinite var(--lp-offset);
+    }
+    .lecture-state--b .lecture-state__dot::after {
+      animation: lp-line-b var(--lp-cycle) var(--lp-ease) infinite var(--lp-offset);
+    }
+    @keyframes lp-line-a {
+      0%, 22%  { transform: scaleX(1); }
+      40%, 60% { transform: scaleX(0); }
+      78%, 100%{ transform: scaleX(1); }
+    }
+    @keyframes lp-line-b {
+      0%, 22%  { transform: scaleX(0); }
+      40%, 60% { transform: scaleX(1); }
+      78%, 100%{ transform: scaleX(0); }
+    }
+    /* Le nom du state s'estompe quand son état n'est pas actif */
+    .lecture-state__name { transition: color 400ms ease, opacity 400ms ease; }
+    .lecture-state--a .lecture-state__name {
+      animation: lp-name-a var(--lp-cycle) var(--lp-ease) infinite var(--lp-offset);
+    }
+    .lecture-state--b .lecture-state__name {
+      color: rgba(20, 17, 11, 0.4);
+      animation: lp-name-b var(--lp-cycle) var(--lp-ease) infinite var(--lp-offset);
+    }
+    @keyframes lp-name-a {
+      0%, 22%  { color: rgba(20, 17, 11, 0.95); }
+      40%, 60% { color: rgba(20, 17, 11, 0.40); }
+      78%, 100%{ color: rgba(20, 17, 11, 0.95); }
+    }
+    @keyframes lp-name-b {
+      0%, 22%  { color: rgba(20, 17, 11, 0.40); }
+      40%, 60% { color: rgba(20, 17, 11, 0.95); }
+      78%, 100%{ color: rgba(20, 17, 11, 0.40); }
+    }
+
+    /* ── La paire image : auto-loop avec crossfade (ping-pong A↔B) ── */
+    .lecture-pair {
+      --lp-cycle: 14s;
+      --lp-offset: 0s;
+      --lp-ease: cubic-bezier(0.45, 0, 0.55, 1); /* sinusoïdale douce */
+      position: relative; aspect-ratio: 16/10; overflow: hidden;
+      border-radius: 10px; background: #14110b;
+      box-shadow: 0 22px 60px rgba(20, 17, 11, 0.20);
       isolation: isolate;
+      transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 600ms cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .fade-pair__img {
-      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
-      will-change: clip-path, transform, filter; transform-origin: 50% 50%;
+    .lecture-pair:hover { transform: translateY(-4px); box-shadow: 0 28px 70px rgba(20, 17, 11, 0.26); }
+    .lecture-pair__img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      will-change: opacity;
     }
-    /* Bottom layer (A) garde un Ken Burns continu pour la respiration */
-    .fade-pair__img--a { animation: fp-kb-a var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
-    /* Top layer (B) : Ken Burns + son entrée/sortie via clip-path (déclaré par thème) */
-    .fade-pair__img--b { animation: fp-kb-b var(--fp-cycle) ease-in-out infinite var(--fp-offset); }
-
-    /* ── HORIZONTAL WIPE (meublé) — entre par la gauche, repart par la gauche ── */
-    .fade-pair--theme-furnish .fade-pair__img--b {
-      clip-path: inset(0 100% 0 0);  /* caché à droite (révèle 0% gauche) */
-      animation:
-        fp-wipe-furnish var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset),
-        fp-zoom-furnish var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset),
-        fp-kb-b         var(--fp-cycle) ease-in-out      infinite var(--fp-offset);
+    /* Boucle infinie — crossfade + zoom doux + léger blur en transition.
+       L'image visible respire (zoom 1.0 → 1.04 puis recule), pendant que
+       l'autre arrive en zoom contraire et perd son blur. Effet cinéma. */
+    .lecture-pair__img--a {
+      animation: lp-cinema-a var(--lp-cycle) var(--lp-ease) infinite var(--lp-offset);
+      transform-origin: 50% 50%;
     }
-    @keyframes fp-wipe-furnish {
-      0%        { clip-path: inset(0 100% 0 0); }   /* meublé caché */
-      30%, 35%  { clip-path: inset(0 0 0 0); }      /* totalement révélé (wipe in) */
-      65%, 70%  { clip-path: inset(0 0 0 0); }      /* HOLD — on regarde */
-      100%      { clip-path: inset(0 100% 0 0); }   /* repart par le même bord (wipe out) */
+    .lecture-pair__img--b {
+      opacity: 0;
+      animation: lp-cinema-b var(--lp-cycle) var(--lp-ease) infinite var(--lp-offset);
+      transform-origin: 50% 50%;
     }
-    @keyframes fp-zoom-furnish {
-      0%        { transform: scale(1.06); filter: blur(2px) brightness(1.02); }
-      30%, 70%  { transform: scale(1.00); filter: blur(0)   brightness(1); }
-      100%      { transform: scale(1.06); filter: blur(2px) brightness(1.02); }
+    @keyframes lp-cinema-a {
+      0%      { opacity: 1; transform: scale(1.00); filter: blur(0); }
+      22%     { opacity: 1; transform: scale(1.04); filter: blur(0); }
+      33%     { opacity: 0; transform: scale(1.06); filter: blur(2px); }
+      40%, 60%{ opacity: 0; transform: scale(1.06); filter: blur(2px); }
+      67%     { opacity: 0; transform: scale(1.04); filter: blur(2px); }
+      78%     { opacity: 1; transform: scale(1.02); filter: blur(0); }
+      100%    { opacity: 1; transform: scale(1.00); filter: blur(0); }
     }
-
-    /* ── VERTICAL CURTAIN (nuit) — descend du haut, remonte par le haut ── */
-    .fade-pair--theme-night .fade-pair__img--b {
-      clip-path: inset(100% 0 0 0); /* nuit cachée en haut */
-      animation:
-        fp-curtain-night var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset),
-        fp-tone-night    var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset),
-        fp-kb-b          var(--fp-cycle) ease-in-out      infinite var(--fp-offset);
+    @keyframes lp-cinema-b {
+      0%, 22% { opacity: 0; transform: scale(1.06); filter: blur(2px); }
+      33%     { opacity: 1; transform: scale(1.02); filter: blur(0); }
+      40%     { opacity: 1; transform: scale(1.00); filter: blur(0); }
+      60%     { opacity: 1; transform: scale(1.04); filter: blur(0); }
+      67%     { opacity: 0; transform: scale(1.06); filter: blur(2px); }
+      78%, 100%{ opacity: 0; transform: scale(1.06); filter: blur(2px); }
     }
-    @keyframes fp-curtain-night {
-      0%        { clip-path: inset(100% 0 0 0); }  /* jour visible en intégral */
-      30%, 35%  { clip-path: inset(0 0 0 0); }     /* nuit descendue */
-      65%, 70%  { clip-path: inset(0 0 0 0); }     /* HOLD — tombée de la nuit */
-      100%      { clip-path: inset(100% 0 0 0); }  /* aube — la nuit remonte */
+    /* Chips : on garde le fade A/B aligné sur le bascule d'opacité de chaque image. */
+    @keyframes lp-fade-a {
+      0%, 22%  { opacity: 1; }
+      40%, 60% { opacity: 0; }
+      78%, 100%{ opacity: 1; }
     }
-    /* Discrète teinte chaude pendant la transition (lueur de crépuscule) */
-    @keyframes fp-tone-night {
-      0%, 100%  { filter: brightness(1) saturate(1); }
-      32%, 68%  { filter: brightness(0.96) saturate(1.08); }
-    }
-
-    /* Ken Burns continu — A et B respirent en opposition */
-    @keyframes fp-kb-a {
-      0%, 100% { transform: scale(1.04) translate3d(0, 0, 0); }
-      50%      { transform: scale(1.10) translate3d(-1%, -0.5%, 0); }
-    }
-    @keyframes fp-kb-b {
-      0%, 100% { transform: scale(1.10) translate3d(0.5%, 0.5%, 0); }
-      50%      { transform: scale(1.04) translate3d(0, 0, 0); }
+    @keyframes lp-fade-b {
+      0%, 22%  { opacity: 0; }
+      40%, 60% { opacity: 1; }
+      78%, 100%{ opacity: 0; }
     }
 
-    /* Chip pingpong — synchronisé sur le hold */
-    @keyframes fp-chip-a {
-      0%, 22%  { opacity: 1; transform: translateY(0); }
-      32%, 68% { opacity: 0; transform: translateY(-6px); }
-      78%, 100%{ opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fp-chip-b {
-      0%, 22%  { opacity: 0; transform: translateY(6px); }
-      32%, 68% { opacity: 1; transform: translateY(0); }
-      78%, 100%{ opacity: 0; transform: translateY(6px); }
-    }
-
-    /* Chips that label which state is currently visible */
-    .fade-pair__chip {
-      position: absolute; top: 1.4rem; left: 1.4rem; z-index: 4; pointer-events: none;
+    /* Chips : indiquent l'état visible, synchronisés sur le crossfade. */
+    .lecture-pair__chip {
+      position: absolute; top: 1.2rem; left: 1.2rem; z-index: 4; pointer-events: none;
       font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; font-weight: 500;
-      background: rgba(20, 17, 11, 0.82); color: white;
-      padding: 8px 14px; border-radius: 999px;
+      background: rgba(20, 17, 11, 0.78); color: white;
+      padding: 7px 13px; border-radius: 999px;
       backdrop-filter: blur(10px);
       will-change: opacity;
     }
-    .fade-pair__chip--a { animation: fp-chip-a var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset); }
-    .fade-pair__chip--b { animation: fp-chip-b var(--fp-cycle) var(--fp-ease) infinite var(--fp-offset); }
+    .lecture-pair__chip--a { animation: lp-fade-a var(--lp-cycle) var(--lp-ease) infinite var(--lp-offset); }
+    .lecture-pair__chip--b { opacity: 0; animation: lp-fade-b var(--lp-cycle) var(--lp-ease) infinite var(--lp-offset); }
 
-    /* Night theme: warm chip on the night side */
-    .fade-pair--theme-night .fade-pair__chip--b { background: rgba(218, 164, 70, 0.92); color: #14110b; letter-spacing: 0.24em; }
-    .fade-pair--theme-furnish .fade-pair__chip--b { background: rgba(232, 226, 213, 0.96); color: #14110b; }
+    /* Couleur du chip "B" selon le thème */
+    .lecture-pair--theme-night    .lecture-pair__chip--b { background: rgba(218, 164, 70, 0.94); color: #14110b; }
+    .lecture-pair--theme-furnish  .lecture-pair__chip--b { background: rgba(232, 226, 213, 0.96); color: #14110b; }
 
-    .fade-pair__caption {
-      position: absolute; bottom: 1.4rem; left: 50%; transform: translateX(-50%); z-index: 4; pointer-events: none;
-      font-family: 'Inter', sans-serif; font-size: 13px; letter-spacing: 0.06em; font-weight: 500;
-      background: rgba(255,255,255,0.96); color: #14110b;
-      padding: 8px 18px; border-radius: 999px;
-      box-shadow: 0 6px 22px rgba(0,0,0,0.18);
-      white-space: nowrap;
+    /* ── Bouton de bascule manuel A↔B ─────────────────────────
+       Au premier clic : l'auto-cycle de la paire est désactivé et le bouton
+       devient maître. Chaque clic suivant flippe entre les deux états avec
+       un crossfade doux (CSS transition à la place de l'animation infinie). */
+    .lecture-row__toggle {
+      display: inline-flex; align-items: center; gap: 0.65rem;
+      align-self: center; /* centre le bouton dans la colonne flex */
+      width: auto;
+      margin-top: 1.6rem;
+      padding: 0.75rem 1.2rem 0.75rem 1rem;
+      background: rgba(20, 17, 11, 0.92);
+      border: 1px solid rgba(20, 17, 11, 0.92);
+      border-radius: 999px;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
+      color: #fdfcf9;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(20, 17, 11, 0.18);
+      transition: background 220ms ease, border-color 220ms ease, color 220ms ease,
+                  transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease;
+      -webkit-appearance: none; appearance: none;
     }
+    .lecture-row__toggle:hover {
+      background: #14110b;
+      border-color: #14110b;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(20, 17, 11, 0.28);
+    }
+    .lecture-row__toggle:active { transform: translateY(0); }
+    .lecture-row__toggle:focus-visible {
+      outline: 2px solid rgba(20, 17, 11, 0.55); outline-offset: 3px;
+    }
+    .lecture-row__toggle-icon {
+      display: inline-block;
+      font-size: 0.95rem; line-height: 1;
+      transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .lecture-row__toggle.is-flipped .lecture-row__toggle-icon { transform: rotate(180deg); }
+    .lecture-row__toggle-label { line-height: 1; }
 
-    /* Subtle hover lift */
-    .fade-pair { transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 600ms cubic-bezier(0.16, 1, 0.3, 1); }
-    .fade-pair:hover { transform: translateY(-4px); box-shadow: 0 22px 70px rgba(20,17,11,0.26); }
+    /* État manuel — désactive les animations infinies et passe en transition pure */
+    .lecture-row.is-manual .lecture-pair__img,
+    .lecture-row.is-manual .lecture-pair__chip {
+      animation: none !important;
+    }
+    .lecture-row.is-manual .lecture-pair__img {
+      transition: opacity 600ms ease, transform 900ms cubic-bezier(0.16, 1, 0.3, 1), filter 600ms ease;
+    }
+    .lecture-row.is-manual .lecture-pair__chip {
+      transition: opacity 360ms ease;
+    }
+    .lecture-row.is-manual .lecture-pair__img--a { opacity: 1; transform: scale(1); filter: blur(0); }
+    .lecture-row.is-manual .lecture-pair__img--b { opacity: 0; transform: scale(1.04); filter: blur(0); }
+    .lecture-row.is-manual .lecture-pair__chip--a { opacity: 1; }
+    .lecture-row.is-manual .lecture-pair__chip--b { opacity: 0; }
+    .lecture-row.is-manual.is-state-b .lecture-pair__img--a { opacity: 0; transform: scale(1.04); }
+    .lecture-row.is-manual.is-state-b .lecture-pair__img--b { opacity: 1; transform: scale(1); }
+    .lecture-row.is-manual.is-state-b .lecture-pair__chip--a { opacity: 0; }
+    .lecture-row.is-manual.is-state-b .lecture-pair__chip--b { opacity: 1; }
 
+    /* Indicateurs de state (dots + names) suivent aussi le bouton en mode manuel */
+    .lecture-row.is-manual .lecture-state__dot::after,
+    .lecture-row.is-manual .lecture-state__name {
+      animation: none !important;
+      transition: color 400ms ease, background-color 400ms ease, transform 400ms ease;
+    }
+    .lecture-row.is-manual .lecture-state--a .lecture-state__name { color: rgba(20, 17, 11, 0.95); }
+    .lecture-row.is-manual .lecture-state--b .lecture-state__name { color: rgba(20, 17, 11, 0.40); }
+    .lecture-row.is-manual.is-state-b .lecture-state--a .lecture-state__name { color: rgba(20, 17, 11, 0.40); }
+    .lecture-row.is-manual.is-state-b .lecture-state--b .lecture-state__name { color: rgba(20, 17, 11, 0.95); }
+
+    /* Responsive — pile une colonne sous 820px, garde l'ordre logique (image au-dessus du texte) */
+    @media (max-width: 820px) {
+      .lecture-row,
+      .lecture-row--img-left,
+      .lecture-row--img-right { grid-template-columns: 1fr; }
+      .lecture-row .lecture-pair       { grid-column: 1; grid-row: 1; }
+      .lecture-row .lecture-row__text  { grid-column: 1; grid-row: 2; }
+    }
     @media (prefers-reduced-motion: reduce) {
-      .fade-pair__img, .fade-pair__chip { animation: none !important; }
-      .fade-pair__img--b { clip-path: inset(0) !important; }
-      .fade-pair__chip--b { opacity: 1; }
-      .fade-pair__chip--a { opacity: 0; }
+      .lecture-pair__img, .lecture-pair__chip { animation: none !important; }
+      .lecture-pair__img--a, .lecture-pair__chip--a { opacity: 1; }
+      .lecture-pair__img--b, .lecture-pair__chip--b { opacity: 0; }
     }
+
+    /* (Ancien bloc .fade-pair retiré — la section Lectures utilise maintenant
+       .lecture-pair avec interaction hover/tap, voir plus bas.) */
 
     @media (prefers-reduced-motion: reduce) {
       img.hero__video, img.strip__video, img.scrub__video,
       .hero__video--motion, .scrub__video--motion,
       .space, .space__media img, .gallery__item img { animation: none !important; transition: none !important; }
+    }
+
+    /* ── Section AMENITIES — douze raisons de visiter (grille 3×4) ───────── */
+    .amenities {
+      padding: clamp(5rem, 10vh, 9rem) clamp(1.25rem, 4vw, 4rem);
+      background: #faf7f0;
+      color: var(--ink);
+    }
+    .amenities__head {
+      max-width: 1480px; margin: 0 auto clamp(2.5rem, 6vh, 5rem);
+      text-align: center;
+    }
+    .amenities__eyebrow {
+      display: inline-block;
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase;
+      font-weight: 500;
+      color: rgba(20, 17, 11, 0.55);
+      margin-bottom: 1rem;
+    }
+    .amenities__title {
+      font-family: var(--display); font-weight: 600;
+      font-size: clamp(2rem, 4.5vw, 3.6rem);
+      letter-spacing: -0.02em; line-height: 1.05;
+      margin: 0 0 0.8rem; color: var(--ink);
+    }
+    .amenities__title em { font-style: italic; font-weight: 400; color: rgba(20, 17, 11, 0.55); }
+    .amenities__sub {
+      max-width: 56ch; margin: 0 auto;
+      color: rgba(20, 17, 11, 0.6);
+      font-size: 0.95rem; line-height: 1.6;
+    }
+    /* Grille éditoriale — dividers fins entre les cellules, façon fiche */
+    .amenities__grid {
+      max-width: 1480px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid rgba(20, 17, 11, 0.14);
+    }
+    .amenity {
+      display: flex; flex-direction: column; align-items: flex-start;
+      gap: 0.9rem;
+      padding: clamp(1.6rem, 3vh, 2.4rem) clamp(1.2rem, 2.2vw, 2rem);
+      border-bottom: 1px solid rgba(20, 17, 11, 0.14);
+      border-right: 1px solid rgba(20, 17, 11, 0.14);
+      background: transparent;
+      transition: background 360ms ease;
+    }
+    .amenity:hover { background: rgba(20, 17, 11, 0.025); }
+    .amenity:nth-child(3n) { border-right: 0; }
+    .amenity__icon {
+      width: 28px; height: 28px;
+      stroke: var(--ink);
+      stroke-width: 1.4;
+      fill: none;
+      stroke-linecap: round; stroke-linejoin: round;
+      opacity: 0.88;
+    }
+    .amenity__title {
+      font-family: var(--display); font-weight: 500;
+      font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+      letter-spacing: -0.01em; line-height: 1.2;
+      margin: 0; color: var(--ink);
+    }
+    .amenity__desc {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-size: 0.86rem; line-height: 1.5;
+      color: rgba(20, 17, 11, 0.62);
+      margin: 0;
+    }
+    @media (max-width: 880px) {
+      .amenities__grid { grid-template-columns: repeat(2, 1fr); }
+      .amenity:nth-child(3n) { border-right: 1px solid rgba(20, 17, 11, 0.14); }
+      .amenity:nth-child(2n) { border-right: 0; }
+    }
+    @media (max-width: 540px) {
+      .amenities__grid { grid-template-columns: 1fr; }
+      .amenity { border-right: 0 !important; }
     }
   </style>
 </head>
@@ -244,48 +806,6 @@
   <!-- Barre de progression de scroll, fixée tout en haut -->
   <div class="progress" data-progress aria-hidden="true"></div>
 
-  <!-- Rail de chapitres, fixé à gauche, met en surbrillance la section active -->
-  <aside class="rail" data-rail aria-label="Sommaire">
-    <ol class="rail__list">
-      <li class="rail__item" data-rail-target="top">
-        <a href="#top"><span class="rail__num">00</span><span class="rail__lab">Index</span></a>
-      </li>
-      <li class="rail__item" data-rail-target="architecture">
-        <a href="#architecture"><span class="rail__num">01</span><span class="rail__lab">Architecture</span></a>
-      </li>
-      <li class="rail__item" data-rail-target="mesures">
-        <a href="#mesures"><span class="rail__num">02</span><span class="rail__lab">Mesures</span></a>
-      </li>
-      <li class="rail__item" data-rail-target="lectures">
-        <a href="#lectures"><span class="rail__num">03</span><span class="rail__lab">Lectures</span></a>
-      </li>
-      <li class="rail__item" data-rail-target="espaces">
-        <a href="#espaces"><span class="rail__num">04</span><span class="rail__lab">Espaces</span></a>
-      </li>
-      <li class="rail__item" data-rail-target="films">
-        <a href="#films"><span class="rail__num">05a</span><span class="rail__lab">Films</span></a>
-      </li>
-      <li class="rail__item" data-rail-target="film">
-        <a href="#film"><span class="rail__num">05b</span><span class="rail__lab">Film</span></a>
-      </li>
-      <li class="rail__item" data-rail-target="galerie">
-        <a href="#galerie"><span class="rail__num">06</span><span class="rail__lab">Galerie</span></a>
-      </li>
-      <li class="rail__item" data-rail-target="localisation">
-        <a href="#localisation"><span class="rail__num">07</span><span class="rail__lab">Localisation</span></a>
-      </li>
-      <li class="rail__item" data-rail-target="contact">
-        <a href="#contact"><span class="rail__num">08</span><span class="rail__lab">Visite</span></a>
-      </li>
-    </ol>
-  </aside>
-
-  <!-- Étiquette de chapitre flottante, visible en bas-gauche pendant le scroll -->
-  <div class="chapter" data-chapter aria-hidden="true">
-    <span class="chapter__num" data-chapter-num>00</span>
-    <span class="chapter__sep">·</span>
-    <span class="chapter__lab" data-chapter-lab>Index</span>
-  </div>
   <!-- ─────────────────────────────────────────────────────────────
        NAVIGATION
        Barre fine, fixe, qui s'opacifie au scroll.
@@ -295,16 +815,20 @@
       <span class="nav__brand-mark">Christie's</span>
       <span class="nav__brand-sub">International Real Estate</span>
     </a>
-    <nav class="nav__links" aria-label="Navigation principale">
-      <a href="#architecture">Architecture</a>
+    <nav class="nav__links" aria-label="Navigation principale" data-nav-links>
+      <!-- Pilule liquid glass (positionnée en JS, suit le hover / section active) -->
+      <span class="nav__pill" data-nav-pill aria-hidden="true">
+        <span class="nav__pill-blur"></span>
+        <span class="nav__pill-tint"></span>
+        <span class="nav__pill-highlight"></span>
+      </span>
       <a href="#mesures">Mesures</a>
       <a href="#lectures">Lectures</a>
       <a href="#espaces">Espaces</a>
-      <a href="#film">Film</a>
       <a href="#galerie">Galerie</a>
       <a href="#localisation">Localisation</a>
     </nav>
-    <a href="#contact" class="nav__cta">Visite privée</a>
+    <a href="#contact" class="nav__cta">Réservez votre visite</a>
   </header>
 
   <main id="top">
@@ -313,7 +837,7 @@
     ────────────────────────────────────────────────────────── -->
     <section class="hero" data-hero data-section="top">
       <div class="hero__media">
-        <video class="hero__video" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-01.jpg">
+        <video class="hero__video hero__video--vivid" data-hero-pause-loop muted playsinline autoplay preload="auto" poster="assets/images/erpicum-org-01.jpg">
           <source src="assets/videos/aerien-drone.mp4" type="video/mp4" />
         </video>
         <div class="hero__veil" aria-hidden="true"></div>
@@ -326,176 +850,47 @@
         <span class="hero__status"><span class="dot"></span>Disponible</span>
       </div>
 
-      <!-- Statement central -->
-      <div class="hero__content" data-hero-content>
-        <h1 class="hero__title">
-          <span class="hero__line">Une œuvre</span>
-          <span class="hero__line hero__line--accent">d'architecture.</span>
+      <!-- Statement — "Villa Erpicum" en surtitre + "Percke" en grand -->
+      <div class="hero__content hero__content--center" data-hero-content>
+        <h1 class="hero__title hero__title--white">
+          <span class="hero__line hero__line--sub">Villa Erpicum</span>
+          <span class="hero__line">Percke</span>
         </h1>
-        <p class="hero__lede">
-          Une œuvre signée <strong>Bruno&nbsp;Erpicum</strong> (2007). <strong>622&nbsp;m²</strong> habitables, posés sur <strong>1.900&nbsp;m²</strong> de jardin paysager, dans le quartier Prince d'Orange à Uccle.
-        </p>
       </div>
 
-      <!-- Bandeau inférieur : chiffres + CTA -->
-      <div class="hero__bottom">
-        <ul class="hero__strip" aria-label="Chiffres clés">
-          <li><span class="hero__strip-num">622</span><span class="hero__strip-lab">m² habitables</span></li>
-          <li><span class="hero__strip-num">1.900</span><span class="hero__strip-lab">m² de terrain</span></li>
-          <li><span class="hero__strip-num">5</span><span class="hero__strip-lab">chambres</span></li>
-          <li><span class="hero__strip-num">2007</span><span class="hero__strip-lab">Bruno Erpicum</span></li>
-        </ul>
-        <a href="#architecture" class="hero__cta">
-          <span>Découvrir</span>
-          <span class="hero__cta-arrow" aria-hidden="true">↓</span>
-        </a>
-      </div>
     </section>
 
     <!-- ─────────────────────────────────────────────────────────
-         STMT — Manifeste d'ouverture
-    ────────────────────────────────────────────────────────── -->
-    <section class="stmt" data-stmt>
-      <div class="stmt__inner reveal">
-        <span class="eyebrow">— Manifesto</span>
-        <h2 class="stmt__title">
-          L'anneau&nbsp;: lien ou cercle.<br />
-          <em>Ici, les liens s'entrelacent.</em>
-        </h2>
-        <p class="stmt__attr">— Bruno Erpicum, à propos de Percke (2007)</p>
-      </div>
-    </section>
-
-    <!-- ─────────────────────────────────────────────────────────
-         FILM STRIP A — vers Architecture (vidéo 2.mp4)
-    ────────────────────────────────────────────────────────── -->
-    <section class="strip" data-strip>
-      <div class="strip__sticky">
-        <video class="strip__video strip__video--motion" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-02.jpg">
-          <source src="assets/videos/allee-arrivee.mp4" type="video/mp4" />
-        </video>
-
-        <div class="strip__info">
-          <div class="strip__head" data-strip-anim>
-            <span class="strip__num">A → 01</span>
-            <span class="strip__eyebrow">Approche</span>
-          </div>
-          <h3 class="strip__title" data-strip-anim>
-            L'arrivée,
-            <em>entre les haies.</em>
-          </h3>
-          <p class="strip__desc" data-strip-anim>
-            Un cheminement minéral entre les haies de hêtres taillées guide jusqu'à
-            l'entrée. La maison se révèle progressivement, dissimulée dans la
-            végétation du Prince d'Orange.
-          </p>
-        </div>
-
-        <ul class="strip__meta" data-strip-anim>
-          <li><span>Architecte</span><span>Bruno Erpicum</span></li>
-          <li><span>Année</span><span>2007</span></li>
-          <li><span>Concept</span><span>Anneau · porte-à-faux</span></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ─────────────────────────────────────────────────────────
-         01 · ARCHITECTURE — édito : volumes, lumière, matières
-    ────────────────────────────────────────────────────────── -->
-    <section class="editorial" id="architecture" data-section="architecture">
-      <div class="editorial__intro reveal">
-        <div class="chap-mark">
-          <span class="chap-mark__num">01</span>
-          <span class="chap-mark__lab">Architecture</span>
-        </div>
-        <h2 class="editorial__title">
-          Deux anneaux entrelacés,
-          <em>une seule maison.</em>
-        </h2>
-        <p class="editorial__sub">
-          Bruno Erpicum, Percke 1, 2007. Un manifeste construit.
-        </p>
-      </div>
-
-      <div class="editorial__body">
-        <div class="editorial__col reveal">
-          <p class="editorial__para">
-            Au lieu-dit Percke, Bruno Erpicum dessine en 2007 deux
-            <em>anneaux</em> qui s'entrelacent. Le premier, posé au sol, déploie
-            les espaces de vie. Le second, suspendu, protège les volumes intimes
-            et offre une terrasse au plein ciel.
-          </p>
-          <p class="editorial__para">
-            La maison se lit comme une partition&nbsp;: trois niveaux desservis
-            par ascenseur, 622&nbsp;m² habitables, ouverts en grand sur 1.900&nbsp;m²
-            de jardin paysager. La piscine, extérieure et intérieure, traverse
-            l'œuvre de part en part.
-          </p>
-
-          <blockquote class="editorial__quote">
-            « L'anneau&nbsp;: lien ou cercle. Ici, les liens s'entrelacent.
-            L'un protège les espaces privés et sert de terrasse. L'autre
-            couvre la maison comme un toit. »
-            <cite>— Bruno Erpicum, à propos de Percke</cite>
-          </blockquote>
-        </div>
-
-        <figure class="editorial__figure reveal" data-photo-anim>
-          <img
-            src="assets/images/erpicum-org-04.jpg"
-            alt="Escalier béton · circulation verticale"
-            loading="lazy"
-            data-parallax="0.18"
-          />
-          <figcaption>Circulation verticale · béton ciré, lumière en bandeau</figcaption>
-        </figure>
-      </div>
-
-      <figure class="editorial__wide reveal" data-photo-anim>
-        <img
-          src="assets/images/erpicum-org-09.jpg"
-          alt="Vue plongeante sur le bassin extérieur"
-          loading="lazy"
-          data-parallax="0.22"
-        />
-      </figure>
-    </section>
-
-    <!-- ─────────────────────────────────────────────────────────
-         02 · MESURES — fiche technique
+         02 · MESURES — fiche technique (juste après le hero)
     ────────────────────────────────────────────────────────── -->
     <section class="specs" id="mesures" data-section="mesures">
       <header class="specs__head reveal">
-        <div class="chap-mark">
-          <span class="chap-mark__num">02</span>
-          <span class="chap-mark__lab">Mesures</span>
-        </div>
         <h2 class="specs__title">Fiche technique</h2>
       </header>
 
       <div class="specs__grid">
         <div class="spec reveal">
-          <span class="spec__lab">A · Surface habitable</span>
+          <span class="spec__lab">Surface habitable</span>
           <span class="spec__num"><span data-count-to="622">0</span><i>m²</i></span>
         </div>
         <div class="spec reveal">
-          <span class="spec__lab">B · Terrain</span>
+          <span class="spec__lab">Terrain</span>
           <span class="spec__num"><span data-count-to="1900" data-count-format="thousands">0</span><i>m²</i></span>
         </div>
         <div class="spec reveal">
-          <span class="spec__lab">C · Jardin paysager</span>
+          <span class="spec__lab">Jardin paysager</span>
           <span class="spec__num"><span data-count-to="1900" data-count-format="thousands">0</span><i>m²</i></span>
         </div>
         <div class="spec reveal">
-          <span class="spec__lab">D · Chambres</span>
+          <span class="spec__lab">Chambres</span>
           <span class="spec__num"><span data-count-to="5">0</span></span>
         </div>
         <div class="spec reveal">
-          <span class="spec__lab">E · Salles de bains</span>
+          <span class="spec__lab">Salles de bains</span>
           <span class="spec__num"><span data-count-to="5">0</span></span>
         </div>
         <div class="spec reveal">
-          <span class="spec__lab">F · Performance énergétique</span>
+          <span class="spec__lab">Performance énergétique</span>
           <span class="spec__num">C</span>
         </div>
       </div>
@@ -511,60 +906,108 @@
     </section>
 
     <!-- ─────────────────────────────────────────────────────────
-         02b · LECTURES — fade auto entre paires : vide↔meublé, jour↔nuit
+         FILM STRIP A — vers Architecture (vidéo 2.mp4)
+    ────────────────────────────────────────────────────────── -->
+    <section class="strip" data-strip>
+      <div class="strip__sticky">
+        <video class="strip__video strip__video--motion" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-02.jpg">
+          <source src="assets/videos/allee-arrivee.mp4" type="video/mp4" />
+        </video>
+
+        <div class="strip__info">
+          <h3 class="strip__title" data-strip-anim>
+            L'arrivée,
+            <em>entre les haies.</em>
+          </h3>
+          <p class="strip__desc" data-strip-anim>
+            Un cheminement minéral entre les haies de hêtres taillées. La maison se
+            révèle progressivement, dissimulée dans la végétation.
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ─────────────────────────────────────────────────────────
+         02b · LECTURES — zigzag éditorial (image / texte alternés)
+         Le visiteur survole (desktop) ou tape (mobile) une image
+         pour basculer entre les deux lectures (vide↔meublé · jour↔nuit).
     ────────────────────────────────────────────────────────── -->
     <section class="lectures" id="lectures" data-section="lectures">
       <header class="lectures__head reveal">
-        <div class="chap-mark">
-          <span class="chap-mark__num">02b</span>
-          <span class="chap-mark__lab">Lectures</span>
-        </div>
         <h2 class="lectures__title">
-          Quatre lectures,
-          <em>une seule maison.</em>
+          Deux visages,
+          <em>une même maison.</em>
         </h2>
-        <p class="lectures__sub">
-          Vide ou meublé, jour ou nuit&nbsp;: les images s'enchaînent en boucle pour révéler la même architecture sous quatre lumières.
-        </p>
       </header>
 
-      <div class="lectures__grid">
+      <div class="lectures__rows">
 
-        <!-- 1 · Mezzanine vide ⟷ meublée -->
-        <figure class="fade-pair fade-pair--theme-furnish reveal">
-          <img class="fade-pair__img fade-pair__img--a" src="assets/images/8715417_4_20260122143308.jpg" alt="Mezzanine — état actuel" loading="lazy" />
-          <img class="fade-pair__img fade-pair__img--b" src="assets/images/meuble-mezzanine.png"      alt="Mezzanine — projection meublée" loading="lazy" />
-          <span class="fade-pair__chip fade-pair__chip--a">État actuel</span>
-          <span class="fade-pair__chip fade-pair__chip--b">Mise en scène</span>
-          <figcaption class="fade-pair__caption">La mezzanine · perspective traversante</figcaption>
-        </figure>
+        <!-- 1 · Séjour — image à GAUCHE, texte à DROITE -->
+        <article class="lecture-row lecture-row--img-left reveal">
+          <div class="lecture-row__text" style="--lp-offset: 0s">
+            <div class="lecture-row__head">
+              <span class="lecture-row__num">01</span>
+              <span class="lecture-row__rule" aria-hidden="true"></span>
+            </div>
+            <h3 class="lecture-row__label">Séjour</h3>
+            <ul class="lecture-states" aria-hidden="true">
+              <li class="lecture-state lecture-state--a">
+                <span class="lecture-state__dot"></span>
+                <span class="lecture-state__name">Vide</span>
+              </li>
+              <li class="lecture-state lecture-state--b">
+                <span class="lecture-state__dot"></span>
+                <span class="lecture-state__name">Habité</span>
+              </li>
+            </ul>
+            <button type="button" class="lecture-row__toggle" data-lecture-toggle
+                    data-label-a="Voir habité" data-label-b="Voir vide"
+                    aria-label="Basculer entre l'état vide et habité">
+              <span class="lecture-row__toggle-icon" aria-hidden="true">⇄</span>
+              <span class="lecture-row__toggle-label">Voir habité</span>
+            </button>
+          </div>
+          <figure class="lecture-pair lecture-pair--theme-furnish" style="--lp-offset: 0s">
+            <img class="lecture-pair__img lecture-pair__img--a" src="assets/images/8715417_9_20260122143309.jpg" alt="Séjour — état actuel" loading="lazy" />
+            <img class="lecture-pair__img lecture-pair__img--b" src="assets/images/meuble-salon.png" alt="Séjour — projection meublée" loading="lazy" />
+            <span class="lecture-pair__chip lecture-pair__chip--a">État actuel</span>
+            <span class="lecture-pair__chip lecture-pair__chip--b">Mise en scène</span>
+          </figure>
+        </article>
 
-        <!-- 2 · Séjour vide ⟷ meublé -->
-        <figure class="fade-pair fade-pair--theme-furnish reveal" style="--fp-offset: -4s">
-          <img class="fade-pair__img fade-pair__img--a" src="assets/images/8715417_9_20260122143309.jpg" alt="Séjour — état actuel" loading="lazy" />
-          <img class="fade-pair__img fade-pair__img--b" src="assets/images/meuble-salon.png"           alt="Séjour — projection meublée" loading="lazy" />
-          <span class="fade-pair__chip fade-pair__chip--a">État actuel</span>
-          <span class="fade-pair__chip fade-pair__chip--b">Mise en scène</span>
-          <figcaption class="fade-pair__caption">Le séjour · ouverture sur le jardin</figcaption>
-        </figure>
-
-        <!-- 3 · Façade jour ⟷ nuit -->
-        <figure class="fade-pair fade-pair--theme-night reveal" style="--fp-offset: -8s">
-          <img class="fade-pair__img fade-pair__img--a" src="assets/images/erpicum-org-01.jpg" alt="Façade — jour" loading="lazy" />
-          <img class="fade-pair__img fade-pair__img--b" src="assets/images/nuit-facade.png"   alt="Façade — nuit" loading="lazy" />
-          <span class="fade-pair__chip fade-pair__chip--a">Jour</span>
-          <span class="fade-pair__chip fade-pair__chip--b">Nuit</span>
-          <figcaption class="fade-pair__caption">La façade · porte-à-faux sur le bassin</figcaption>
-        </figure>
-
-        <!-- 4 · Aérien jour ⟷ nuit -->
-        <figure class="fade-pair fade-pair--theme-night reveal" style="--fp-offset: -12s">
-          <img class="fade-pair__img fade-pair__img--a" src="assets/images/8715417_2_20260122143307.jpg" alt="Aérien — jour" loading="lazy" />
-          <img class="fade-pair__img fade-pair__img--b" src="assets/images/nuit-aerien.png"            alt="Aérien — nuit" loading="lazy" />
-          <span class="fade-pair__chip fade-pair__chip--a">Jour</span>
-          <span class="fade-pair__chip fade-pair__chip--b">Nuit</span>
-          <figcaption class="fade-pair__caption">Vue aérienne · au cœur des frondaisons</figcaption>
-        </figure>
+        <!-- 2 · Façade — texte à GAUCHE, image à DROITE -->
+        <article class="lecture-row lecture-row--img-right reveal">
+          <figure class="lecture-pair lecture-pair--theme-night" style="--lp-offset: -7s">
+            <img class="lecture-pair__img lecture-pair__img--a" src="assets/images/erpicum-org-01.jpg" alt="Façade — jour" loading="lazy" />
+            <img class="lecture-pair__img lecture-pair__img--b" src="assets/images/ChatGPT Image 14 mai 2026 à 15_19_53.png" alt="Façade — nuit" loading="lazy" />
+            <span class="lecture-pair__chip lecture-pair__chip--a">Jour</span>
+            <span class="lecture-pair__chip lecture-pair__chip--b">Nuit</span>
+          </figure>
+          <div class="lecture-row__text" style="--lp-offset: -7s">
+            <div class="lecture-row__head">
+              <span class="lecture-row__num">02</span>
+              <span class="lecture-row__rule" aria-hidden="true"></span>
+            </div>
+            <h3 class="lecture-row__label">Façade</h3>
+            <ul class="lecture-states" aria-hidden="true">
+              <li class="lecture-state lecture-state--a">
+                <span class="lecture-state__dot"></span>
+                <span class="lecture-state__name">Jour</span>
+              </li>
+              <li class="lecture-state lecture-state--b">
+                <span class="lecture-state__dot"></span>
+                <span class="lecture-state__name">Nuit</span>
+              </li>
+            </ul>
+            <button type="button" class="lecture-row__toggle" data-lecture-toggle
+                    data-label-a="Voir la nuit" data-label-b="Voir le jour"
+                    aria-label="Basculer entre jour et nuit">
+              <span class="lecture-row__toggle-icon" aria-hidden="true">⇄</span>
+              <span class="lecture-row__toggle-label">Voir la nuit</span>
+            </button>
+          </div>
+        </article>
 
       </div>
     </section>
@@ -579,7 +1022,7 @@
           <span class="chap-mark__lab">Espaces</span>
         </div>
         <h2 class="spaces__title">
-          Neuf univers,
+          Six univers,
           <em>un même langage.</em>
         </h2>
         <p class="spaces__sub">
@@ -593,7 +1036,7 @@
           <article class="space">
             <figure class="space__media"><img src="assets/images/erpicum-org-01.jpg" alt="Le porte-à-faux" loading="lazy" /></figure>
             <div class="space__text">
-              <span class="space__num">01 / 09</span>
+              <span class="space__num">01 / 06</span>
               <h3 class="space__name">Le porte-à-faux</h3>
               <p class="space__desc">Le volume supérieur en surplomb au-dessus du bassin&nbsp;: la signature de l'écriture Erpicum.</p>
             </div>
@@ -602,16 +1045,16 @@
           <article class="space">
             <figure class="space__media"><img src="assets/images/erpicum-org-08.jpg" alt="La cuisine" loading="lazy" /></figure>
             <div class="space__text">
-              <span class="space__num">02 / 09</span>
+              <span class="space__num">02 / 06</span>
               <h3 class="space__name">La cuisine</h3>
               <p class="space__desc">Plan de travail monolithique en pierre cendrée, quinze mètres sans rupture, batterie Miele encastrée.</p>
             </div>
           </article>
 
           <article class="space">
-            <figure class="space__media"><img src="assets/images/erpicum-org-07.jpg" alt="Le salon" loading="lazy" /></figure>
+            <figure class="space__media"><img src="assets/images/meuble-salon.png" alt="Le salon" loading="lazy" /></figure>
             <div class="space__text">
-              <span class="space__num">03 / 09</span>
+              <span class="space__num">03 / 06</span>
               <h3 class="space__name">Le salon</h3>
               <p class="space__desc">Pièce traversante, foyer ouvert, parquet patiné. La pièce de vie centrale, sous l'anneau.</p>
             </div>
@@ -620,7 +1063,7 @@
           <article class="space">
             <figure class="space__media"><img src="assets/images/erpicum-org-03.jpg" alt="La piscine intérieure" loading="lazy" /></figure>
             <div class="space__text">
-              <span class="space__num">04 / 09</span>
+              <span class="space__num">04 / 06</span>
               <h3 class="space__name">La piscine intérieure</h3>
               <p class="space__desc">Eau bleu turquoise, plafond angulaire en porte-à-faux, vis-à-vis sur le jardin par une longue baie.</p>
             </div>
@@ -629,45 +1072,18 @@
           <article class="space">
             <figure class="space__media"><img src="assets/images/erpicum-org-04.jpg" alt="L'escalier" loading="lazy" /></figure>
             <div class="space__text">
-              <span class="space__num">05 / 09</span>
+              <span class="space__num">05 / 06</span>
               <h3 class="space__name">L'escalier</h3>
               <p class="space__desc">Marches en béton ciré, garde-corps lame blanche. La verticalité comme respiration.</p>
             </div>
           </article>
 
           <article class="space">
-            <figure class="space__media"><img src="assets/images/erpicum-org-06.jpg" alt="La mezzanine" loading="lazy" /></figure>
+            <figure class="space__media"><img src="assets/images/8715417_6_20260122143308.jpg" alt="La piscine extérieure" loading="lazy" /></figure>
             <div class="space__text">
-              <span class="space__num">06 / 09</span>
-              <h3 class="space__name">La mezzanine</h3>
-              <p class="space__desc">Vide central sur le séjour, baies pleine hauteur, lecture traversante des trois niveaux.</p>
-            </div>
-          </article>
-
-          <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_14_20260122143310.jpg" alt="La piscine extérieure" loading="lazy" /></figure>
-            <div class="space__text">
-              <span class="space__num">07 / 09</span>
+              <span class="space__num">06 / 06</span>
               <h3 class="space__name">La piscine extérieure</h3>
               <p class="space__desc">Bassin allongé sous le porte-à-faux, dalles cendrées, écran végétal continu.</p>
-            </div>
-          </article>
-
-          <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_5_20260122143308.jpg" alt="La terrasse couverte" loading="lazy" /></figure>
-            <div class="space__text">
-              <span class="space__num">08 / 09</span>
-              <h3 class="space__name">La terrasse couverte</h3>
-              <p class="space__desc">Sous le volume supérieur, dalles cendrées, baies coulissantes pleine hauteur. Une pièce extérieure, toute l'année.</p>
-            </div>
-          </article>
-
-          <article class="space">
-            <figure class="space__media"><img src="assets/images/8715417_17_20260122143311.jpg" alt="Le spa &amp; hammam" loading="lazy" /></figure>
-            <div class="space__text">
-              <span class="space__num">09 / 09</span>
-              <h3 class="space__name">Le spa &amp; hammam</h3>
-              <p class="space__desc">Mosaïque cendrée, hammam vitré, ouverture directe sur la piscine intérieure.</p>
             </div>
           </article>
 
@@ -678,7 +1094,7 @@
           <div class="spaces__count">
             <span data-spaces-current>01</span>
             <span class="spaces__count-sep">/</span>
-            <span>09</span>
+            <span>06</span>
           </div>
           <div class="spaces__bar"><div class="spaces__bar-fill" data-spaces-bar></div></div>
         </div>
@@ -686,98 +1102,124 @@
     </section>
 
     <!-- ─────────────────────────────────────────────────────────
-         04b · FILMS — trois moments scrubés au scroll
+         04a · AMENITIES — douze raisons de visiter
     ────────────────────────────────────────────────────────── -->
-    <section class="films-fs" id="films" data-section="films">
-      <div class="films-fs__track" data-films-fs>
-        <div class="films-fs__stage">
+    <section class="amenities" id="raisons" data-section="raisons">
+      <header class="amenities__head reveal">
+        <span class="amenities__eyebrow">Neuf raisons</span>
+        <h2 class="amenities__title">
+          Neuf raisons
+          <em>de visiter.</em>
+        </h2>
+        <p class="amenities__sub">
+          Une signature d'architecte, des matériaux nobles, deux piscines, un parc paysager — chaque détail compte.
+        </p>
+      </header>
 
-          <article class="ff-slide" data-ff-slide="0">
-            <video class="ff-slide__video" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-02.jpg">
-              <source src="assets/videos/piscine-pergola.mp4" type="video/mp4" />
-            </video>
-            <div class="ff-slide__veil"></div>
-            <div class="ff-slide__caption ff-slide__caption--lead">
-              <span class="ff-slide__eyebrow">04 · Films · Trois cadrages</span>
-              <h2 class="ff-slide__hero">
-                Trois cadrages,
-                <em>en mouvement continu.</em>
-              </h2>
-              <p class="ff-slide__lede">La maison vit pendant que vous scrollez. Trois plans, joués en plein écran.</p>
-              <div class="ff-slide__meta">
-                <span class="ff-slide__num">01 · La piscine, à l'ombre.</span>
-                <span class="ff-slide__desc">Sous la pergola du porte-à-faux, le bassin se déploie en longueur.</span>
-              </div>
-            </div>
-          </article>
+      <div class="amenities__grid">
 
-          <article class="ff-slide" data-ff-slide="1">
-            <video class="ff-slide__video" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-01.jpg">
-              <source src="assets/videos/porte-a-faux-piscine.mp4" type="video/mp4" />
-            </video>
-            <div class="ff-slide__veil"></div>
-            <div class="ff-slide__caption">
-              <span class="ff-slide__num">02 · Le porte-à-faux.</span>
-              <h3 class="ff-slide__title">Volume blanc en surplomb.</h3>
-              <p class="ff-slide__desc">Signature de l'écriture Erpicum — une lecture diagonale du bassin.</p>
-            </div>
-          </article>
+        <article class="amenity reveal">
+          <svg class="amenity__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>
+          </svg>
+          <h3 class="amenity__title">Bruno Erpicum</h3>
+          <p class="amenity__desc">Œuvre signée 2007, deux anneaux entrelacés.</p>
+        </article>
 
-          <article class="ff-slide" data-ff-slide="2">
-            <video class="ff-slide__video" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-09.jpg">
-              <source src="assets/videos/piscine-vertical.mp4" type="video/mp4" />
-            </video>
-            <div class="ff-slide__veil"></div>
-            <div class="ff-slide__caption">
-              <span class="ff-slide__num">03 · Le bassin, à la verticale.</span>
-              <h3 class="ff-slide__title">L'horizon écrasé par le volume blanc.</h3>
-              <p class="ff-slide__desc">Cadrage vertical sur la longueur du bassin — le ciel reste le seul personnage.</p>
-            </div>
-          </article>
+        <article class="amenity reveal">
+          <svg class="amenity__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2 12c0-2 1.5-4 4-4s4 2 6 4 4 4 6 4 4-2 4-4-1.5-4-4-4-4 2-6 4-4 4-6 4-4-2-4-4z"/>
+          </svg>
+          <h3 class="amenity__title">Le porte-à-faux</h3>
+          <p class="amenity__desc">Volume supérieur en surplomb sur le bassin.</p>
+        </article>
 
-          <!-- Indicateur position -->
-          <div class="ff-progress" aria-hidden="true">
-            <span class="ff-progress__num" data-ff-current>01</span>
-            <span class="ff-progress__sep">·</span>
-            <span class="ff-progress__total">03</span>
-            <div class="ff-progress__rail"><div class="ff-progress__fill" data-ff-fill></div></div>
-          </div>
+        <article class="amenity reveal">
+          <svg class="amenity__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2 18c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/>
+            <path d="M2 13c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/>
+          </svg>
+          <h3 class="amenity__title">Piscine intérieure</h3>
+          <p class="amenity__desc">Eau bleu turquoise, plafond angulaire.</p>
+        </article>
 
-        </div>
+        <article class="amenity reveal">
+          <svg class="amenity__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3c-4 5-6 8-6 11a6 6 0 0 0 12 0c0-3-2-6-6-11z"/>
+          </svg>
+          <h3 class="amenity__title">Piscine extérieure</h3>
+          <p class="amenity__desc">Bassin allongé sous le volume blanc.</p>
+        </article>
+
+        <article class="amenity reveal">
+          <svg class="amenity__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>
+            <circle cx="12" cy="12" r="4"/>
+          </svg>
+          <h3 class="amenity__title">Photovoltaïque</h3>
+          <p class="amenity__desc">Toiture en panneaux, autoconsommation.</p>
+        </article>
+
+        <article class="amenity reveal">
+          <svg class="amenity__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 21V8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v13"/>
+            <path d="M2 21h20M9 13h6M9 17h6"/>
+          </svg>
+          <h3 class="amenity__title">Cinq chambres</h3>
+          <p class="amenity__desc">Suite parentale et chambres d'enfants.</p>
+        </article>
+
+        <article class="amenity reveal">
+          <svg class="amenity__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 3v18M18 3v18M6 9h12M6 15h12M3 12h18"/>
+          </svg>
+          <h3 class="amenity__title">Béton ciré</h3>
+          <p class="amenity__desc">Sols et escaliers en finition continue.</p>
+        </article>
+
+        <article class="amenity reveal">
+          <svg class="amenity__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22V12M8 12c-1-3 2-6 4-6s5 3 4 6c-1 3-4 3-8 0z"/>
+            <path d="M12 18l-3-3M12 18l3-3"/>
+          </svg>
+          <h3 class="amenity__title">Jardin paysager</h3>
+          <p class="amenity__desc">1.900 m² d'écrin végétal continu.</p>
+        </article>
+
+        <article class="amenity reveal">
+          <svg class="amenity__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22s-7-7-7-13a7 7 0 0 1 14 0c0 6-7 13-7 13z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          <h3 class="amenity__title">Prince d'Orange</h3>
+          <p class="amenity__desc">Quartier rare, à dix minutes du centre.</p>
+        </article>
+
       </div>
     </section>
 
     <!-- ─────────────────────────────────────────────────────────
-         04 · FILM — vidéo cinématique scrubbée pleine page
+         04b · FILMS — trois vidéos en grille compacte, lecture continue
     ────────────────────────────────────────────────────────── -->
-    <section class="scrub" id="film" data-scrub data-section="film">
-      <div class="scrub__sticky">
-        <video class="scrub__video" muted playsinline autoplay loop preload="auto" poster="assets/images/erpicum-org-01.jpg">
-          <source src="assets/videos/facade-piscine-large.mp4" type="video/mp4" />
-        </video>
+    <section class="films-fs" id="films" data-section="films">
+      <header class="films-fs__head reveal">
+        <span class="films-fs__eyebrow">04 · Film</span>
+      </header>
 
-        <div class="scrub__overlay">
-          <div class="chap-mark chap-mark--light" data-strip-anim>
-            <span class="chap-mark__num">05</span>
-            <span class="chap-mark__lab">Film</span>
-          </div>
-          <h2 class="scrub__title" data-strip-anim>
-            Survol, <em>au cœur des frondaisons.</em>
-          </h2>
-          <p class="scrub__hint" data-strip-anim>Vue drone — le toit photovoltaïque, le bassin, le parc</p>
-        </div>
+      <div class="films-fs__grid">
 
-        <!-- Bloc meta enrichi (en haut-droit) -->
-        <ul class="scrub__meta" data-strip-anim>
-          <li><span>Captation</span><span>Drone aérien</span></li>
-          <li><span>Toiture</span><span>Photovoltaïque</span></li>
-          <li><span>Terrain</span><span>1.900 m² paysagés</span></li>
-        </ul>
+        <figure class="ff-card ff-card--landscape reveal">
+          <video class="ff-card__video" data-no-loop muted playsinline autoplay preload="metadata" poster="assets/images/erpicum-org-01.jpg">
+            <source src="assets/videos/porte-a-faux-piscine-reverse.mp4" type="video/mp4" />
+          </video>
+        </figure>
 
-        <!-- Indicateur de progression du scrub -->
-        <div class="scrub__progress" aria-hidden="true">
-          <div class="scrub__progress-bar" data-scrub-progress></div>
-        </div>
+        <figure class="ff-card reveal">
+          <video class="ff-card__video" data-no-loop muted playsinline autoplay preload="metadata" poster="assets/images/erpicum-org-09.jpg">
+            <source src="assets/videos/piscine-vertical.mp4" type="video/mp4" />
+          </video>
+        </figure>
+
       </div>
     </section>
 
@@ -812,7 +1254,7 @@
     <section class="location" id="localisation" data-section="localisation">
       <figure class="location__media reveal" data-photo-anim>
         <img
-          src="assets/images/erpicum-org-01.jpg"
+          src="assets/images/8715417_2_20260122143307.jpg"
           alt="Maison Erpicum dans son écrin paysager, Uccle"
           loading="lazy"
           data-parallax="0.25"
@@ -854,46 +1296,54 @@
     ────────────────────────────────────────────────────────── -->
     <section class="contact" id="contact" data-section="contact">
       <div class="contact__inner reveal">
-        <div class="chap-mark chap-mark--light">
-          <span class="chap-mark__num">08</span>
-          <span class="chap-mark__lab">Visite privée</span>
-        </div>
-        <h2 class="contact__title">
-          Organiser une <em>visite privée.</em>
-        </h2>
-        <p class="contact__lede">
-          Sur rendez-vous uniquement. Notre équipe vous accompagne pour une
-          découverte confidentielle de la villa.
-        </p>
+        <span class="contact__eyebrow">— Visite privée</span>
+        <h2 class="contact__title">Organiser une visite.</h2>
 
-        <form class="contact__form" novalidate>
-          <div class="field">
-            <label for="f-name">Nom</label>
-            <input id="f-name" name="name" type="text" autocomplete="name" required />
-          </div>
-          <div class="field">
-            <label for="f-email">Adresse e-mail</label>
-            <input id="f-email" name="email" type="email" autocomplete="email" required />
-          </div>
-          <div class="field">
-            <label for="f-phone">Téléphone</label>
-            <input id="f-phone" name="phone" type="tel" autocomplete="tel" />
-          </div>
-          <div class="field field--full">
-            <label for="f-msg">Message</label>
-            <textarea id="f-msg" name="message" rows="4"></textarea>
-          </div>
-          <button class="contact__cta" type="submit">
-            <span>Demander une visite</span>
-            <span class="contact__cta-arrow" aria-hidden="true">→</span>
-          </button>
-        </form>
+        <div class="contact__grid">
+          <figure class="contact__portrait reveal" data-photo-anim>
+            <img
+              src="assets/images/agent-jean-marc-delcroix.jpg"
+              alt="Jean-Marc Delcroix — Christie's International Real Estate"
+              loading="lazy"
+            />
+          </figure>
 
-        <div class="contact__direct">
-          <span>Ou directement&nbsp;:</span>
-          <a href="mailto:contact@christiesrealestatebelgium.be">
-            contact@christiesrealestatebelgium.be
-          </a>
+          <div class="contact__panel">
+            <div class="contact__agent">
+              <span class="contact__label">Votre interlocuteur</span>
+              <h3 class="contact__name">Jean-Marc Delcroix</h3>
+              <p class="contact__agency">Christie's International Real Estate</p>
+            </div>
+
+            <ul class="contact__lines">
+              <li>
+                <a href="tel:+3228080364" class="contact__line">
+                  <span class="contact__line-label">Bureau</span>
+                  <span class="contact__line-value">+32 (0)2 808 03 64</span>
+                </a>
+              </li>
+              <li>
+                <a href="tel:+32474740807" class="contact__line">
+                  <span class="contact__line-label">Mobile</span>
+                  <span class="contact__line-value">+32 (0)474 74 08 07</span>
+                </a>
+              </li>
+              <li>
+                <a href="mailto:jmd@christiesrealestatebelgium.be?subject=Demande de visite — Maison Erpicum (Percke)" class="contact__line">
+                  <span class="contact__line-label">E-mail</span>
+                  <span class="contact__line-value contact__line-value--email">jmd@christiesrealestatebelgium.be</span>
+                </a>
+              </li>
+            </ul>
+
+            <a
+              href="mailto:jmd@christiesrealestatebelgium.be?subject=Demande de visite — Maison Erpicum (Percke)"
+              class="contact__cta-pill"
+            >
+              <span>Demander une visite</span>
+              <span class="contact__cta-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -914,70 +1364,211 @@
     </div>
   </footer>
 
+  <!-- SVG filter — distortion fractal pour la pilule liquid glass du nav -->
+  <svg style="display:none; position:absolute;" aria-hidden="true">
+    <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+      <feTurbulence type="fractalNoise" baseFrequency="0.001 0.005" numOctaves="1" seed="17" result="turbulence" />
+      <feComponentTransfer in="turbulence" result="mapped">
+        <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5" />
+        <feFuncG type="gamma" amplitude="0" exponent="1" offset="0" />
+        <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5" />
+      </feComponentTransfer>
+      <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
+      <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100" lightingColor="white" result="specLight">
+        <fePointLight x="-200" y="-200" z="300" />
+      </feSpecularLighting>
+      <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage" />
+      <feDisplacementMap in="SourceGraphic" in2="softMap" scale="200" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </svg>
+
   <script src="script.js"></script>
 
-  <!-- ── Films section : crossfade des 3 vidéos plein écran piloté par le scroll ── -->
+  <!-- ── STRIP "Arrivée" : animations de texte indépendantes du scrub vidéo ──
+       Le script.js gate ses anims de texte sur la présence de [data-strip-video],
+       qu'on a retirée pour laisser la vidéo en autoplay. On les ré-injecte ici.
+       Entrée en once:true → le texte reste visible quand on remonte la page,
+       et aucune anim de sortie pour qu'il ne disparaisse pas sur scroll arrière. -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      document.querySelectorAll('[data-strip]').forEach((section) => {
+        // Si script.js gère déjà cette section (vidéo scrubbée), on ne double pas
+        if (section.querySelector('[data-strip-video]')) return;
+        const infoEls = section.querySelectorAll('[data-strip-anim]');
+        if (!infoEls.length) return;
+        gsap.fromTo(
+          infoEls,
+          { y: 24, opacity: 0 },
+          {
+            y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger: 0.06,
+            scrollTrigger: { trigger: section, start: 'top 80%', once: true },
+          }
+        );
+      });
+    });
+  </script>
+
+  <!-- ── NAV liquid glass : pilule qui suit le hover (et marque la section active) ── -->
   <script>
     (function () {
-      const track  = document.querySelector('[data-films-fs]');
-      if (!track) return;
-      const slides  = Array.from(track.querySelectorAll('.ff-slide'));
-      const videos  = slides.map((s) => s.querySelector('video'));
-      const numEl   = track.querySelector('[data-ff-current]');
-      const fillEl  = track.querySelector('[data-ff-fill]');
-      const N       = slides.length;
-      if (N === 0) return;
+      const navEl = document.querySelector('[data-nav-links]');
+      if (!navEl) return;
+      const pill  = navEl.querySelector('[data-nav-pill]');
+      const links = Array.from(navEl.querySelectorAll('a'));
+      if (!pill || !links.length) return;
 
-      // Chaque slide est centrée à i/(N-1) dans la progression du scroll.
-      // halfWidth = 0.7 · stride permet un beau croisement à 50/50.
-      const stride    = 1 / Math.max(1, N - 1);
-      const halfWidth = stride * 0.7;
+      let hoverIdx  = -1;
+      let activeIdx = -1;
+      let currentIdx = -1;
 
-      let raf = 0;
+      // Sections cibles déduites de l'attribut href
+      const sections = links.map((a) => {
+        const id = a.getAttribute('href');
+        return id && id.startsWith('#') ? document.querySelector(id) : null;
+      });
 
-      function update() {
-        const r = track.getBoundingClientRect();
-        const scrollable = r.height - window.innerHeight;
-        if (scrollable <= 0) return;
-        const scrolled = Math.min(Math.max(-r.top, 0), scrollable);
-        const progress = scrolled / scrollable;          // 0 → 1
+      function moveTo(idx) {
+        if (idx === currentIdx) return;
+        currentIdx = idx;
+        // Reset highlight class on all links
+        links.forEach((a, i) => a.classList.toggle('is-pill-target', i === idx));
+        if (idx < 0) {
+          pill.classList.remove('is-visible');
+          return;
+        }
+        const link  = links[idx];
+        const linkR = link.getBoundingClientRect();
+        const navR  = navEl.getBoundingClientRect();
+        pill.style.transform = `translate(${linkR.left - navR.left}px, ${linkR.top - navR.top}px)`;
+        pill.style.width  = linkR.width  + 'px';
+        pill.style.height = linkR.height + 'px';
+        pill.classList.add('is-visible');
+      }
 
-        let bestI = 0, bestDist = Infinity;
+      function compute() {
+        const idx = hoverIdx >= 0 ? hoverIdx : activeIdx;
+        // Force recalcul (au resize, la position du lien peut changer)
+        currentIdx = -2;
+        moveTo(idx);
+      }
 
-        slides.forEach((slide, i) => {
-          const center = i * stride;
-          const dist   = Math.abs(progress - center);
-          let op = 1 - dist / halfWidth;
-          if (op < 0) op = 0;
-          if (op > 1) op = 1;
-          slide.style.opacity = op.toFixed(3);
+      links.forEach((a, i) => {
+        a.addEventListener('mouseenter', () => { hoverIdx = i; moveTo(i); });
+      });
+      navEl.addEventListener('mouseleave', () => {
+        hoverIdx = -1;
+        moveTo(activeIdx);
+      });
 
-          // Pause des vidéos quasi-invisibles (économie CPU)
-          const v = videos[i];
-          if (v) {
-            if (op > 0.05) {
-              if (v.paused) { const p = v.play(); if (p && p.catch) p.catch(() => {}); }
-            } else {
-              if (!v.paused) v.pause();
-            }
-          }
-
-          if (dist < bestDist) { bestDist = dist; bestI = i; }
+      // Détecte la section active (le dernier élément dont le top a passé 40% du viewport)
+      function detectActive() {
+        const mid = window.innerHeight * 0.4;
+        let active = -1;
+        sections.forEach((el, i) => {
+          if (!el) return;
+          const r = el.getBoundingClientRect();
+          if (r.top <= mid) active = i;
         });
-
-        if (numEl)  numEl.textContent  = String(bestI + 1).padStart(2, '0');
-        if (fillEl) fillEl.style.width = (progress * 100).toFixed(1) + '%';
+        if (active !== activeIdx) {
+          activeIdx = active;
+          if (hoverIdx < 0) moveTo(activeIdx);
+        }
       }
 
-      function onScroll() {
-        if (raf) return;
-        raf = requestAnimationFrame(() => { raf = 0; update(); });
-      }
-
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', update);
-      update();
+      detectActive();
+      window.addEventListener('scroll', detectActive, { passive: true });
+      window.addEventListener('resize', compute);
+      // Re-positionne après chargement des fonts (les largeurs des liens peuvent changer)
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(compute);
     })();
   </script>
+
+  <!-- ── Hero video : loop avec pause de 3s entre chaque cycle ── -->
+  <script>
+    (function () {
+      const v = document.querySelector('[data-hero-pause-loop]');
+      if (!v) return;
+      const PAUSE_MS = 3000;
+      let timer = 0;
+
+      v.addEventListener('ended', () => {
+        // freeze sur la dernière frame, attend 3s, puis relit depuis le début
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          try { v.currentTime = 0; const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+          catch (_) { /* transient */ }
+        }, PAUSE_MS);
+      });
+
+      // Si l'onglet redevient visible pendant la pause, on ne précipite rien :
+      // le timer continue. Si l'onglet a été caché et la vidéo bloquée, on relance.
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && v.paused && v.ended) {
+          // déjà géré par 'ended' → no-op ici
+        }
+      });
+    })();
+  </script>
+
+  <!-- ── Lectures : bouton de bascule manuel A↔B sur chaque paire.
+       Premier clic : la rangée passe en mode manuel (auto-cycle arrêté).
+       Chaque clic suivant flippe entre l'état A et l'état B avec un crossfade doux. ── -->
+  <script>
+    (function () {
+      document.querySelectorAll('.lecture-row').forEach((row) => {
+        const btn = row.querySelector('[data-lecture-toggle]');
+        const pair = row.querySelector('.lecture-pair');
+        if (!btn || !pair) return;
+
+        const labelEl = btn.querySelector('.lecture-row__toggle-label');
+        const labelA = btn.dataset.labelA || 'Voir l\'autre';
+        const labelB = btn.dataset.labelB || 'Revenir';
+
+        btn.addEventListener('click', () => {
+          // 1er clic : on passe en manuel (arrête l'auto-cycle)
+          if (!row.classList.contains('is-manual')) {
+            row.classList.add('is-manual');
+          }
+          const flipped = row.classList.toggle('is-state-b');
+          btn.classList.toggle('is-flipped', flipped);
+          btn.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+          if (labelEl) labelEl.textContent = flipped ? labelB : labelA;
+        });
+      });
+    })();
+  </script>
+
+  <!-- ── Vidéo "play once" : neutralise le loop forcé par l'observer mobile de script.js
+       et fige la vidéo sur sa dernière frame une fois lue. ── -->
+  <script>
+    (function () {
+      document.querySelectorAll('[data-no-loop]').forEach((v) => {
+        let completed = false;
+        v.loop = false;
+        v.removeAttribute('loop');
+
+        v.addEventListener('ended', () => {
+          completed = true;
+          v.loop = false;
+          v.removeAttribute('loop');
+        });
+
+        // À chaque play (y compris ceux déclenchés par l'IntersectionObserver mobile
+        // qui force loop=true), on annule le loop. Si la vidéo a déjà été jouée,
+        // on la repositionne à la fin et on pause.
+        v.addEventListener('play', () => {
+          v.loop = false;
+          v.removeAttribute('loop');
+          if (completed) {
+            try { v.currentTime = v.duration || 0; } catch (_) {}
+            v.pause();
+          }
+        });
+      });
+    })();
+  </script>
+
 </body>
 </html>
